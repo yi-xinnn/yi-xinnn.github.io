@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
     <style>
-        /* 設定中文字體為思源宋體，英文字體為 TT Barrels 粗體，並設定星空背景 */
+        /* 設定中文字體為思源宋體，英文字體為 TT Barrels 粗體，並設定粉色星空背景 */
         body {
-            /* 啟用星空背景 - 使用簡單的 SVG 星星背景 */
-            background: #030E26; /* 深藍色背景作為基礎 */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#030E26"/><circle cx="10" cy="10" r="0.2" fill="white"/><circle cx="90" cy="50" r="0.3" fill="white"/><circle cx="50" cy="90" r="0.4" fill="white"/><circle cx="25" cy="70" r="0.15" fill="white"/><circle cx="75" cy="30" r="0.25" fill="white"/><circle cx="40" cy="20" r="0.1" fill="white"/><circle cx="80" cy="80" r="0.35" fill="white"/></svg>'); 
+            /* 啟用粉色星空背景 - 使用深粉紫色作為基礎 */
+            background: #3B013B; 
+            /* 簡單的 SVG 星星背景，將背景色調整為粉紫色 */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#3B013B"/><circle cx="10" cy="10" r="0.2" fill="#FFC0CB"/><circle cx="90" cy="50" r="0.3" fill="#FFE4E1"/><circle cx="50" cy="90" r="0.4" fill="#F0F8FF"/><circle cx="25" cy="70" r="0.15" fill="#FFC0CB"/><circle cx="75" cy="30" r="0.25" fill="#FFE4E1"/><circle cx="40" cy="20" r="0.1" fill="#F0F8FF"/><circle cx="80" cy="80" r="0.35" fill="#FFC0CB"/></svg>'); 
             background-size: cover; 
             background-attachment: fixed; 
             
@@ -29,13 +30,13 @@
         }
 
         h1 {
-            /* 標題樣式 */
+            /* 標題樣式，調整為亮粉色系 */
             font-family: 'Noto Serif TC', serif;
             font-weight: 700; 
-            color: #FFD700; /* 金色標題 */
+            color: #FF69B4; /* 亮粉色 (Hot Pink) */
             margin-bottom: 40px;
             font-size: 2.5em;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); 
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.9); /* 粉色發光效果 */
         }
 
         #quote-box {
@@ -44,7 +45,7 @@
             background-color: rgba(255, 255, 255, 0.1); 
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 0 30px rgba(173, 216, 230, 0.5); 
+            box-shadow: 0 0 30px rgba(255, 192, 203, 0.7); /* 淡淡的粉光效果 */
             min-height: 150px;
             display: flex;
             align-items: center;
@@ -57,8 +58,7 @@
             font-size: 1.8em;
             line-height: 1.6;
             margin: 0;
-            color: #E0FFFF; /* 淺青色文字 */
-            /* 針對英文套用 TT Barrels 粗體 */
+            color: #FFFAF0; /* 接近白色的淺色文字 */
             font-family: 'Noto Serif TC', 'Barrels Bold', sans-serif; 
         }
 
@@ -67,20 +67,20 @@
             width: 100px;
             height: 100px;
             border-radius: 50%; 
-            background-color: #DA70D6; /* 紫蘭色 */
+            background-color: #FF1493; /* 深粉紅色 */
             color: #FFF;
-            border: 5px solid #FFD700; /* 金色邊框 */
+            border: 5px solid #FFC0CB; /* 淺粉色邊框 */
             font-size: 1.5em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(218, 112, 214, 0.8);
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
             z-index: 10; 
         }
 
         #generate-button:hover {
-            background-color: #B06AAB; 
-            box-shadow: 0 0 30px rgba(255, 215, 0, 1); 
+            background-color: #C71585; /* 滑鼠移上去顏色變深 */
+            box-shadow: 0 0 30px rgba(255, 192, 203, 1.2); /* 發光效果更強 */
             transform: scale(1.05); 
         }
 
@@ -91,17 +91,17 @@
         /* 讓粗體（英文）部分可以更好地顯示 TT Barrels 粗體 */
         strong {
             font-family: 'Barrels Bold', sans-serif;
-            font-weight: normal; /* Barrels Bold 本身就是粗體，不需要額外設定 */
+            font-weight: normal; 
             display: block; /* 讓英文換行顯示，排版更清晰 */
             margin-top: 10px;
-            font-size: 0.8em; /* 英文可以稍微小一點 */
+            font-size: 0.8em; 
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🌌 隨機句子產生器 ✨</h1>
+        <h1>💖 隨機句子產生器 🌸</h1>
     </header>
 
     <main>
@@ -164,9 +164,7 @@
             const randomIndex = Math.floor(Math.random() * quotes.length);
             const randomQuote = quotes[randomIndex];
             
-            // 使用 innerHTML 和正則表達式來處理句子中的中文和粗體英文
             // 將句子中 **...** 包裹的部分轉換為 <strong>...</strong> 標籤
-            // 這樣就可以利用 CSS 針對 <strong> 標籤設定的 Barrels Bold 字體
             quoteText.innerHTML = randomQuote.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         }
 
