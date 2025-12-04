@@ -7,12 +7,12 @@
   <style>
     /* 少量 CSS，只用 class（沒有 id） */
     :root{font-family: 'Helvetica Neue', Arial, sans-serif;color:#222}
-    .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#fff7fb}
+    .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#fff7fb url('https://i.imgur.com/9yG8a7k.png');background-size:cover;}
     .title{font-size:1.6rem;margin-bottom:18px;font-weight:700}
     .card{width:100%;max-width:520px;background:#ffffff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);padding:20px;display:flex;flex-direction:column;gap:14px;align-items:center}
     .generator{width:100%;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff 0%,#fffdfa 100%);border:1px solid rgba(0,0,0,0.04)}
-    .sentence-en{font-size:1.05rem;font-weight:600;text-align:center;margin-bottom:6px}
-    .sentence-zh{font-size:0.95rem;color:#555;text-align:center}
+    .sentence-en{font-size:1.05rem;font-weight:800;font-family:'TT Barrels', sans-serif;text-align:center;margin-bottom:6px}
+    .sentence-zh{font-size:0.95rem;color:#555;font-family:'Source Han Serif TC','思源宋體',serif;text-align:center}
     .hint{font-size:0.8rem;color:#888}
     .controls{display:flex;align-items:center;gap:12px;margin-top:6px}
     .btn-circle{width:64px;height:64px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;font-weight:700;font-size:1.2rem;box-shadow:0 6px 14px rgba(0,0,0,0.12);background:#ff9bcc;color:#fff;transition:transform .12s ease}
@@ -36,23 +36,47 @@
         <div class="hint">按圓形按鈕來產生中英句子</div>
       </div>
 
-      <div class="small-note">要新增或修改句子：打開 &lt;script&gt; 裡的 sentences 陣列。</div>
+      
     </section>
   </main>
 
   <script>
     // 句子資料：每個物件有 en（英文）與 zh（中文）
     const sentences = [
-      {en: "I found a small café near school.", zh: "我在學校附近找到一家小咖啡館。"},
-      {en: "Don't forget to drink water during study.", zh: "讀書時別忘了喝水。"},
-      {en: "She solved the problem with a clever idea.", zh: "她用一個聰明的點子解決了那個問題。"},
-      {en: "The music made everyone smile.", zh: "那段音樂讓大家都笑了。"},
-      {en: "Take three deep breaths and relax.", zh: "深呼吸三次，放輕鬆。"},
-      {en: "He drew a map of his dream town.", zh: "他畫了夢想小鎮的地圖。"},
-      {en: "Learning a little every day goes a long way.", zh: "每天學一點，進步會很多。"},
-      {en: "The sunrise painted the sky with soft colors.", zh: "日出把天空染成溫柔的顏色。"},
-      {en: "She shared her snack with a shy classmate.", zh: "她把點心分給一位害羞的同學。"},
-      {en: "Write one sentence about your happiest memory.", zh: "寫一句關於你最快樂回憶的句子。"}
+      {en: "Have you done the things you've always wanted to do?", zh: "一直很想去做的事，去做了嗎。"},
+      {en: "Mindset shapes your state.", zh: "心態決定狀態。"},
+      {en: "Give yourself a full explanation, and give others the results of your experience.", zh: "給自己一個完整的交代，給別人一個經驗的成果。"},
+      {en: "When you're tired, remember why you started.", zh: "累的時候，想想當初為什麼開始。"},
+      {en: "Those who once shone should never dim.", zh: "發過光的人，請你不要黯淡。"},
+      {en: "Falling and striving are both addictive.", zh: "墮落和努力一樣都會上癮。"},
+      {en: "What doesn't kill me makes me stronger.", zh: "那些不能殺死我的，都將使我更堅強。"},
+      {en: "Growth comes not from material stacking, but from the gentle protection you give yourself.", zh: "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。"},
+      {en: "Life can still go on, even if patched.", zh: "日子嘛，縫縫補補還能過。"},
+      {en: "Someone amazing is reading this right now.", zh: "這個世界，有個很棒的人，他正在讀這句話。"},
+      {en: "Dear, it's okay. Chaos is part of growth.", zh: "親愛的，沒關係，混亂也是成長的一部份。"},
+      {en: "The process of getting better is rarely comfortable.", zh: "變好的過程，通常都不會太舒服。"},
+      {en: "Remember your original intention. Don't lose your direction midway.", zh: "別忘記走上這一條路的初衷是什麼，不能在途中迷失自己的方向。"},
+      {en: "Feeling lost isn't shameful—it means you still care.", zh: "失落並不丟臉，它代表你還在乎。"},
+      {en: "Life is a thousand breakdowns and a thousand-and-one comebacks.", zh: "生活是一千次崩潰，一千零一次挺住。"},
+      {en: "Don't think the world is unworthy just because your eyes turn red.", zh: "不要眼眶一紅，就覺得人間不值得。"},
+      {en: "Allow yourself to be a late-blooming flower.", zh: "允許自己是那朵晚開的花。"},
+      {en: "Enduring means it's yours.", zh: "撐過就是你的。"},
+      {en: "The brave keep running even with tears.", zh: "真正勇敢的人，是哪怕含著淚水也要繼續奔跑的人。"},
+      {en: "If miracles exist, they are another name for effort.", zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。"},
+      {en: "You can fake effort, but results won't play along.", zh: "你可以假裝努力，但結果不會陪你演戲。"},
+      {en: "Luck comes from efforts unseen.", zh: "幸運來自你不為人知的努力。"},
+      {en: "Take action now; leave results to time.", zh: "行動交給現在，結果交由時間。"},
+      {en: "Everyone has their own blooming season.", zh: "每個人的花期不同，不必焦慮有人比你提前擁有。"},
+      {en: "Not every rain needs an umbrella; some tears help flowers grow.", zh: "不是每場雨都要撐傘，有些眼淚會讓花長出來。"},
+      {en: "If you feel you're in hell, keep going.", zh: "如果你覺得身處地獄，那還不快繼續往前走。"},
+      {en: "If your heart has chosen, stay firm.", zh: "心裡有選擇的話，堅定好了。"},
+      {en: "The process may be hard, but the dream is clear.", zh: "過程很累很苦，但夢想很清楚。"},
+      {en: "After trying, you'll either succeed or grow.", zh: "努力過後，不是成功就是成長。"},
+      {en: "Life has no correct choices—only the process of making your choice correct.", zh: "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。"},
+      {en: "When you're strong enough, even blades fall on your shoulders.", zh: "當你夠強，是刀都往肩上扛。"},
+      {en: "Don't chase perfection—focus on living well.", zh: "不要想著完美，而是好好過生活、過現在。"},
+      {en: "Every night you survive deserves applause.", zh: "你撐過的每一個黑夜，都值得一點掌聲。"},
+      {en: "We all carry our own heat and frost.", zh: "我們都有各自的滾燙和冰霜。"}
     ];
 
     // 選取元素（只使用 class，不含 id）
