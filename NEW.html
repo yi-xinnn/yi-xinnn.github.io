@@ -1,113 +1,180 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <!-- 思源宋體 + TT Barrels 字體 -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>隨機句子產生器</title>
-  <style>
-    /* 少量 CSS，只用 class（沒有 id） */
-    :root{font-family: 'Helvetica Neue', Arial, sans-serif;color:#222}
-    .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#ffe6f5 url('https://png.pngtree.com/thumb_back/fh260/background/20230611/pngtree-pink-galaxy-starry-sky-background-image_2924806.jpg');background-size:cover;background-position:center;background-repeat:no-repeat;background-size:cover;background-position:center;background-repeat:no-repeat;background-size:cover;}
-    .title{font-size:1.6rem;margin-bottom:18px;font-weight:700}
-    .card{width:100%;max-width:520px;background:#ffffff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);padding:20px;display:flex;flex-direction:column;gap:14px;align-items:center}
-    .generator{width:100%;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff 0%,#fffdfa 100%);border:1px solid rgba(0,0,0,0.04)}
-    .sentence-en{font-size:1.05rem;font-weight:800;font-family:'TT Barrels', sans-serif;text-align:center;margin-bottom:6px}
-    .sentence-zh{font-size:0.95rem;color:#555;font-family:'Source Han Serif TC','思源宋體',serif;text-align:center}
-    .hint{font-size:0.8rem;color:#888}
-    .controls{display:flex;align-items:center;gap:12px;margin-top:6px}
-    .btn-circle{width:64px;height:64px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;font-weight:700;font-size:1.2rem;box-shadow:0 6px 14px rgba(0,0,0,0.12);background:#ff9bcc;color:#fff;transition:transform .12s ease}
-    .btn-circle:active{transform:translateY(2px) scale(.98)}
-    .small-note{font-size:0.78rem;color:#777}
-    @media (max-width:420px){.btn-circle{width:56px;height:56px}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隨機句子產生器</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
+    
+    <style>
+        /* 設定中文字體為思源宋體，英文字體為 TT Barrels 粗體，並設定星空背景 */
+        body {
+            /* 啟用星空背景 - 使用簡單的 SVG 星星背景 */
+            background: #030E26; /* 深藍色背景作為基礎 */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#030E26"/><circle cx="10" cy="10" r="0.2" fill="white"/><circle cx="90" cy="50" r="0.3" fill="white"/><circle cx="50" cy="90" r="0.4" fill="white"/><circle cx="25" cy="70" r="0.15" fill="white"/><circle cx="75" cy="30" r="0.25" fill="white"/><circle cx="40" cy="20" r="0.1" fill="white"/><circle cx="80" cy="80" r="0.35" fill="white"/></svg>'); 
+            background-size: cover; 
+            background-attachment: fixed; 
+            
+            color: #FFF; 
+            font-family: 'Noto Serif TC', serif; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            /* 標題樣式 */
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 700; 
+            color: #FFD700; /* 金色標題 */
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7); 
+        }
+
+        #quote-box {
+            /* 句子生成器區域的容器 */
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.1); 
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(173, 216, 230, 0.5); 
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        #quote-text {
+            /* 句子文字的樣式 */
+            font-size: 1.8em;
+            line-height: 1.6;
+            margin: 0;
+            color: #E0FFFF; /* 淺青色文字 */
+            /* 針對英文套用 TT Barrels 粗體 */
+            font-family: 'Noto Serif TC', 'Barrels Bold', sans-serif; 
+        }
+
+        /* 圓形按鈕 */
+        #generate-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; 
+            background-color: #DA70D6; /* 紫蘭色 */
+            color: #FFF;
+            border: 5px solid #FFD700; /* 金色邊框 */
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(218, 112, 214, 0.8);
+            z-index: 10; 
+        }
+
+        #generate-button:hover {
+            background-color: #B06AAB; 
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1); 
+            transform: scale(1.05); 
+        }
+
+        #generate-button:active {
+            transform: scale(0.95); 
+        }
+
+        /* 讓粗體（英文）部分可以更好地顯示 TT Barrels 粗體 */
+        strong {
+            font-family: 'Barrels Bold', sans-serif;
+            font-weight: normal; /* Barrels Bold 本身就是粗體，不需要額外設定 */
+            display: block; /* 讓英文換行顯示，排版更清晰 */
+            margin-top: 10px;
+            font-size: 0.8em; /* 英文可以稍微小一點 */
+        }
+    </style>
 </head>
 <body>
-  <main class="container">
-    <h1 class="title">隨機句子產生器</h1>
 
-    <section class="card">
-      <div class="generator">
-        <div class="sentence-en" aria-live="polite"></div>
-        <div class="sentence-zh"></div>
-      </div>
+    <header>
+        <h1>🌌 隨機句子產生器 ✨</h1>
+    </header>
 
-      <div class="controls">
-        <button type="button" class="btn-circle" aria-label="產生句子">Go</button>
-        <div class="hint">按圓形按鈕來產生中英句子</div>
-      </div>
+    <main>
+        <div id="quote-box">
+            <p id="quote-text">按下圓形按鈕，獲得一句話的力量！💪</p>
+        </div>
+    </main>
 
-      
-    </section>
-  </main>
+    <footer>
+        <button id="generate-button" aria-label="生成新句子">
+            <span>GO!</span>
+        </button>
+    </footer>
 
-  <script>
-    // 句子資料：每個物件有 en（英文）與 zh（中文）
-    const sentences = [
-      {en: "Have you done the things you've always wanted to do?", zh: "一直很想去做的事，去做了嗎。"},
-      {en: "Mindset shapes your state.", zh: "心態決定狀態。"},
-      {en: "Give yourself a full explanation, and give others the results of your experience.", zh: "給自己一個完整的交代，給別人一個經驗的成果。"},
-      {en: "When you're tired, remember why you started.", zh: "累的時候，想想當初為什麼開始。"},
-      {en: "Those who once shone should never dim.", zh: "發過光的人，請你不要黯淡。"},
-      {en: "Falling and striving are both addictive.", zh: "墮落和努力一樣都會上癮。"},
-      {en: "What doesn't kill me makes me stronger.", zh: "那些不能殺死我的，都將使我更堅強。"},
-      {en: "Growth comes not from material stacking, but from the gentle protection you give yourself.", zh: "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。"},
-      {en: "Life can still go on, even if patched.", zh: "日子嘛，縫縫補補還能過。"},
-      {en: "Someone amazing is reading this right now.", zh: "這個世界，有個很棒的人，他正在讀這句話。"},
-      {en: "Dear, it's okay. Chaos is part of growth.", zh: "親愛的，沒關係，混亂也是成長的一部份。"},
-      {en: "The process of getting better is rarely comfortable.", zh: "變好的過程，通常都不會太舒服。"},
-      {en: "Remember your original intention. Don't lose your direction midway.", zh: "別忘記走上這一條路的初衷是什麼，不能在途中迷失自己的方向。"},
-      {en: "Feeling lost isn't shameful—it means you still care.", zh: "失落並不丟臉，它代表你還在乎。"},
-      {en: "Life is a thousand breakdowns and a thousand-and-one comebacks.", zh: "生活是一千次崩潰，一千零一次挺住。"},
-      {en: "Don't think the world is unworthy just because your eyes turn red.", zh: "不要眼眶一紅，就覺得人間不值得。"},
-      {en: "Allow yourself to be a late-blooming flower.", zh: "允許自己是那朵晚開的花。"},
-      {en: "Enduring means it's yours.", zh: "撐過就是你的。"},
-      {en: "The brave keep running even with tears.", zh: "真正勇敢的人，是哪怕含著淚水也要繼續奔跑的人。"},
-      {en: "If miracles exist, they are another name for effort.", zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。"},
-      {en: "You can fake effort, but results won't play along.", zh: "你可以假裝努力，但結果不會陪你演戲。"},
-      {en: "Luck comes from efforts unseen.", zh: "幸運來自你不為人知的努力。"},
-      {en: "Take action now; leave results to time.", zh: "行動交給現在，結果交由時間。"},
-      {en: "Everyone has their own blooming season.", zh: "每個人的花期不同，不必焦慮有人比你提前擁有。"},
-      {en: "Not every rain needs an umbrella; some tears help flowers grow.", zh: "不是每場雨都要撐傘，有些眼淚會讓花長出來。"},
-      {en: "If you feel you're in hell, keep going.", zh: "如果你覺得身處地獄，那還不快繼續往前走。"},
-      {en: "If your heart has chosen, stay firm.", zh: "心裡有選擇的話，堅定好了。"},
-      {en: "The process may be hard, but the dream is clear.", zh: "過程很累很苦，但夢想很清楚。"},
-      {en: "After trying, you'll either succeed or grow.", zh: "努力過後，不是成功就是成長。"},
-      {en: "Life has no correct choices—only the process of making your choice correct.", zh: "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。"},
-      {en: "When you're strong enough, even blades fall on your shoulders.", zh: "當你夠強，是刀都往肩上扛。"},
-      {en: "Don't chase perfection—focus on living well.", zh: "不要想著完美，而是好好過生活、過現在。"},
-      {en: "Every night you survive deserves applause.", zh: "你撐過的每一個黑夜，都值得一點掌聲。"},
-      {en: "We all carry our own heat and frost.", zh: "我們都有各自的滾燙和冰霜。"}
-    ];
+    <script>
+        // 包含中英句子的陣列
+        const quotes = [
+            "一直很想去做的事，去做了嗎？**Did you do the thing you always wanted to do?**",
+            "心態決定狀態。**Attitude determines altitude.**",
+            "給自己一個完整的交代，給別人一個經驗的成果。**Give yourself a full account, and others the fruit of experience.**",
+            "累的時候，想想當初為什麼開始。**When you're tired, remember why you started.**",
+            "發過光的人，請你不要黯淡。**Those who have shined, please do not fade.**",
+            "墮落和努力一樣都會上癮。**Falling and striving are both addictive.**",
+            "那些不能殺死我的，都將使我更堅強。**What doesn't kill me makes me stronger.**",
+            "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。**Growth never comes from material accumulation, but from the gentle protection in your heart to blaze your own trail.**",
+            "日子嘛，縫縫補補還能過。**Life is like that, patching it up, it can still go on.**",
+            "這個世界，有個很棒的人，他正在讀這句話。**There is a wonderful person in this world, and they are reading this sentence.**",
+            "親愛的，沒關係，混亂也是成長的一部份。**Dear, it's okay, chaos is also a part of growth.**",
+            "變好的過程，通常都不會太舒服。**The process of getting better is usually uncomfortable.**",
+            "別忘記走上這一條路的初衷是甚麼，不能在遙途中迷失自己的方向。**Don't forget the initial reason for walking this path, and don't lose your direction on the long journey.**",
+            "失落並不丟臉，它代表你還在乎。**Being lost is not shameful; it means you still care.**",
+            "生活是一千次崩潰，一千零一次挺住。**Life is a thousand breakdowns and a thousand and one times standing firm.**",
+            "不要眼眶一紅，就覺得人間不值得。**Don't feel the world is unworthy just because your eyes turn red.**",
+            "允許自己是那朵晚開的花。**Allow yourself to be the late blooming flower.**",
+            "撐過就是你的。**Endure it, and it will be yours.**",
+            "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。**The truly brave person is one who continues to run, even with tears in their eyes.**",
+            "如果這世界上真的有奇蹟，那只是努力的另一個名字。**If there really is a miracle in this world, it is just another name for effort.**",
+            "你可以假裝努力，但結果不會陪你演戲。**You can pretend to work hard, but the result won't play along.**",
+            "幸運來自你不為人知的努力。**Luck comes from your unseen effort.**",
+            "行動交給現在，結果交由時間。**Action belongs to the present, the outcome belongs to time.**",
+            "變好的過程，通常都不會太舒服。**The process of getting better is usually uncomfortable.**",
+            "每個人的花期不同，不必焦慮有人比你提前擁有。**Everyone has a different blooming period; don't be anxious that someone possesses things before you.**",
+            "不是每場雨都要撐傘，有些眼淚會讓花長出來。**Not every rain requires an umbrella; some tears help flowers grow.**",
+            "如果你覺得身處地獄，那還不快繼續往前走。**If you think you are in hell, why don't you keep going?**",
+            "心裡有選擇的話，堅定好了。**If you have a choice in your heart, stand firm.**",
+            "過程很累很苦，但夢想很清楚。**The process is tiring and bitter, but the dream is clear.**",
+            "努力過後，不是成功就是成長。**After effort, it's either success or growth.**",
+            "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。**Life never has the right choice, only the process of making your choice the right answer.**",
+            "當你夠強，是刀都往肩上扛。**When you are strong enough, you carry every knife on your shoulder.**",
+            "不要想著完美，而是好好過生活、過現在。**Don't aim for perfection, but live life well, live in the present.**",
+            "你撐過的每一個黑夜，都值得一點掌聲。**Every dark night you endure deserves a round of applause.**",
+            "我們都有各自的滾燙和冰霜。**We all have our own heat and frost.**"
+        ];
 
-    // 選取元素（只使用 class，不含 id）
-    const btn = document.querySelector('.btn-circle');
-    const enEl = document.querySelector('.sentence-en');
-    const zhEl = document.querySelector('.sentence-zh');
+        const quoteText = document.getElementById('quote-text');
+        const generateButton = document.getElementById('generate-button');
 
-    // 產生隨機句子
-    function pickRandom() {
-      const i = Math.floor(Math.random() * sentences.length);
-      return sentences[i];
-    }
+        // 隨機生成句子的函式
+        function generateRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const randomQuote = quotes[randomIndex];
+            
+            // 使用 innerHTML 和正則表達式來處理句子中的中文和粗體英文
+            // 將句子中 **...** 包裹的部分轉換為 <strong>...</strong> 標籤
+            // 這樣就可以利用 CSS 針對 <strong> 標籤設定的 Barrels Bold 字體
+            quoteText.innerHTML = randomQuote.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
 
-    // 點擊按鈕後顯示句子
-    btn.addEventListener('click', () => {
-      const s = pickRandom();
-      // 簡單的淡入效果
-      enEl.style.opacity = 0;
-      zhEl.style.opacity = 0;
-      setTimeout(() => {
-        enEl.textContent = s.en;
-        zhEl.textContent = s.zh;
-        enEl.style.transition = 'opacity .18s ease';
-        zhEl.style.transition = 'opacity .18s ease';
-        enEl.style.opacity = 1;
-        zhEl.style.opacity = 1;
-      }, 120);
-    });
-  </script>
+        // 監聽按鈕的點擊事件
+        generateButton.addEventListener('click', generateRandomQuote);
+
+        // 網頁加載時先生成一個句子
+        generateRandomQuote();
+    </script>
 </body>
 </html>
