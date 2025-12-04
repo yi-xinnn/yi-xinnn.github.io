@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>隨機句子產生器</title>
+  <style>
+    /* 少量 CSS，只用 class（沒有 id） */
+    :root{font-family: 'Helvetica Neue', Arial, sans-serif;color:#222}
+    .container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#fff7fb}
+    .title{font-size:1.6rem;margin-bottom:18px;font-weight:700}
+    .card{width:100%;max-width:520px;background:#ffffff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);padding:20px;display:flex;flex-direction:column;gap:14px;align-items:center}
+    .generator{width:100%;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff 0%,#fffdfa 100%);border:1px solid rgba(0,0,0,0.04)}
+    .sentence-en{font-size:1.05rem;font-weight:600;text-align:center;margin-bottom:6px}
+    .sentence-zh{font-size:0.95rem;color:#555;text-align:center}
+    .hint{font-size:0.8rem;color:#888}
+    .controls{display:flex;align-items:center;gap:12px;margin-top:6px}
+    .btn-circle{width:64px;height:64px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;font-weight:700;font-size:1.2rem;box-shadow:0 6px 14px rgba(0,0,0,0.12);background:#ff9bcc;color:#fff;transition:transform .12s ease}
+    .btn-circle:active{transform:translateY(2px) scale(.98)}
+    .small-note{font-size:0.78rem;color:#777}
+    @media (max-width:420px){.btn-circle{width:56px;height:56px}}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1 class="title">隨機句子產生器</h1>
+
+    <section class="card">
+      <div class="generator">
+        <div class="sentence-en" aria-live="polite"></div>
+        <div class="sentence-zh"></div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="btn-circle" aria-label="產生句子">Go</button>
+        <div class="hint">按圓形按鈕來產生中英句子</div>
+      </div>
+
+      <div class="small-note">要新增或修改句子：打開 &lt;script&gt; 裡的 sentences 陣列。</div>
+    </section>
+  </main>
+
+  <script>
+    // 句子資料：每個物件有 en（英文）與 zh（中文）
+    const sentences = [
+      {en: "I found a small café near school.", zh: "我在學校附近找到一家小咖啡館。"},
+      {en: "Don't forget to drink water during study.", zh: "讀書時別忘了喝水。"},
+      {en: "She solved the problem with a clever idea.", zh: "她用一個聰明的點子解決了那個問題。"},
+      {en: "The music made everyone smile.", zh: "那段音樂讓大家都笑了。"},
+      {en: "Take three deep breaths and relax.", zh: "深呼吸三次，放輕鬆。"},
+      {en: "He drew a map of his dream town.", zh: "他畫了夢想小鎮的地圖。"},
+      {en: "Learning a little every day goes a long way.", zh: "每天學一點，進步會很多。"},
+      {en: "The sunrise painted the sky with soft colors.", zh: "日出把天空染成溫柔的顏色。"},
+      {en: "She shared her snack with a shy classmate.", zh: "她把點心分給一位害羞的同學。"},
+      {en: "Write one sentence about your happiest memory.", zh: "寫一句關於你最快樂回憶的句子。"}
+    ];
+
+    // 選取元素（只使用 class，不含 id）
+    const btn = document.querySelector('.btn-circle');
+    const enEl = document.querySelector('.sentence-en');
+    const zhEl = document.querySelector('.sentence-zh');
+
+    // 產生隨機句子
+    function pickRandom() {
+      const i = Math.floor(Math.random() * sentences.length);
+      return sentences[i];
+    }
+
+    // 點擊按鈕後顯示句子
+    btn.addEventListener('click', () => {
+      const s = pickRandom();
+      // 簡單的淡入效果
+      enEl.style.opacity = 0;
+      zhEl.style.opacity = 0;
+      setTimeout(() => {
+        enEl.textContent = s.en;
+        zhEl.textContent = s.zh;
+        enEl.style.transition = 'opacity .18s ease';
+        zhEl.style.transition = 'opacity .18s ease';
+        enEl.style.opacity = 1;
+        zhEl.style.opacity = 1;
+      }, 120);
+    });
+  </script>
+</body>
+</html>
