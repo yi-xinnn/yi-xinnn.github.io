@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>隨機句子產生器 - 分類標籤修正版</title>
-     <link rel="icon" href="擷取.PNG">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
@@ -75,7 +74,6 @@
             margin: 0 0 10px 0; 
             color: #333; 
             font-family: 'Noto Serif TC', 'Barrels Bold', sans-serif; 
-            animation: fadeIn 0.8s ease-out; 
         }
 
         #quote-footer {
@@ -200,7 +198,7 @@
 
     <main>
         <div id="quote-box">
-            <p id="quote-text">請先選擇您喜歡的句子類型！</p>
+            <p id="quote-text"></p>
             <div id="quote-footer"></div> 
         </div>
     </main>
@@ -220,43 +218,43 @@
     </footer>
 
     <script>
-        // *** 句子庫：已新增「廢話文學」標籤 ***
+        // *** 句子庫：包含廢話文學 ***
         const quotes = [
             // *** 新增的「廢話文學」幽默句子 ***
-            { zh: "聽君一席話，如聽一席話。", en: "Listening to your words is like listening to words.", tags: ["廢話文學" },
+            { zh: "聽君一席話，如聽一席話。", en: "Listening to your words is like listening to words.", tags: ["廢話文學", "幽默"] },
             { zh: "欸你還記得我嗎，我們從小就不認識，你在你家玩，我在我家玩。", en: "Hey, do you remember me? We've never known each other since childhood. You played at your house, I played at mine.", tags: ["廢話文學", "生活"] },
-            { zh: "你知道動物派對誰沒被邀請嗎？冰箱。", en: "Do you know who wasn't invited to the animal party? The refrigerator.", tags: ["廢話文學"] },
-            { zh: "沒有人可以利用我，因為我沒用。", en: "Nobody can use me, because I am useless.", tags: ["廢話文學"] },
-            { zh: "我已經不是當年的窮小子了，是今年的。", en: "I am no longer the poor kid from that year; I'm the one from this year.", tags: ["廢話文學"] },
-            { zh: "你如果惹毛我，我就毛茸茸的走開。", en: "If you piss me off, I'll walk away fluffily.", tags: ["廢話文學"] },
-            { zh: "你們都要花12個月才能長大一歲，而我只需要一年。", en: "It takes all of you 12 months to get one year older, but I only need one year.", tags: ["廢話文學"] },
-            { zh: "我吃過的鹽比你吃過的飯還鹹。", en: "The salt I've eaten is saltier than the rice you've eaten.", tags: ["廢話文學"] },
-            { zh: "你再踩到我的底線，我就把底線再往後一點。", en: "If you cross my bottom line again, I'll just move the bottom line back a bit.", tags: ["廢話文學"] },
-            { zh: "如果我猜的沒錯的話，那就是猜對了。", en: "If my guess is not wrong, then it is correct.", tags: ["廢話文學"] },
-            { zh: "我發誓今天不吃炸雞，如果吃了我就再發誓一次。", en: "I swear not to eat fried chicken today, and if I do, I'll just swear again.", tags: ["廢話文學"] },
-            { zh: "我一怒之下，就怒了一下。", en: "In a fit of rage, I raged for a moment.", tags: ["廢話文學"] },
-            { zh: "一人做事，一人當，當當做事，當當當。", en: "One person acts, one person bears, bears act, bears bear bear.", tags: ["廢話文學"] },
-            { zh: "退一萬步講的話，根本聽不到你在講什麼。", en: "If we step back ten thousand steps, I wouldn't be able to hear what you are saying at all.", tags: ["廢話文學"] },
-            { zh: "我以過來人的身分告訴你，我已經過來了。", en: "I tell you this as someone who has been through it: I have already passed through.", tags: ["廢話文學"] },
+            { zh: "你知道動物派對誰沒被邀請嗎？冰箱。", en: "Do you know who wasn't invited to the animal party? The refrigerator.", tags: ["廢話文學", "冷知識"] },
+            { zh: "沒有人可以利用我，因為我沒用。", en: "Nobody can use me, because I am useless.", tags: ["廢話文學", "自嘲"] },
+            { zh: "我已經不是當年的窮小子了，是今年的。", en: "I am no longer the poor kid from that year; I'm the one from this year.", tags: ["廢話文學", "金錢"] },
+            { zh: "你如果惹毛我，我就毛茸茸的走開。", en: "If you piss me off, I'll walk away fluffily.", tags: ["廢話文學", "情緒"] },
+            { zh: "你們都要花12個月才能長大一歲，而我只需要一年。", en: "It takes all of you 12 months to get one year older, but I only need one year.", tags: ["廢話文學", "時間"] },
+            { zh: "我吃過的鹽比你吃過的飯還鹹。", en: "The salt I've eaten is saltier than the rice you've eaten.", tags: ["廢話文學", "經驗"] },
+            { zh: "你再踩到我的底線，我就把底線再往後一點。", en: "If you cross my bottom line again, I'll just move the bottom line back a bit.", tags: ["廢話文學", "生活"] },
+            { zh: "如果我猜的沒錯的話，那就是猜對了。", en: "If my guess is not wrong, then it is correct.", tags: ["廢話文學", "哲理"] },
+            { zh: "我發誓今天不吃炸雞，如果吃了我就再發誓一次。", en: "I swear not to eat fried chicken today, and if I do, I'll just swear again.", tags: ["廢話文學", "行動"] },
+            { zh: "我一怒之下，就怒了一下。", en: "In a fit of rage, I raged for a moment.", tags: ["廢話文學", "情緒"] },
+            { zh: "一人做事，一人當，當當做事，當當當。", en: "One person acts, one person bears, bears act, bears bear bear.", tags: ["廢話文學", "口頭禪"] },
+            { zh: "退一萬步講的話，根本聽不到你在講什麼。", en: "If we step back ten thousand steps, I wouldn't be able to hear what you are saying at all.", tags: ["廢話文學", "溝通"] },
+            { zh: "我以過來人的身分告訴你，我已經過來了。", en: "I tell you this as someone who has been through it: I have already passed through.", tags: ["廢話文學", "哲理"] },
             
             // 原有的勵志句子 (已移除 #視野 標籤)
-            { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "堅持"] },
+            { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "夢想"] },
             { zh: "心態決定狀態。", en: "Attitude determines altitude.", tags: ["信念", "哲理"] },
-            { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["成長", "信念"] },
+            { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["成長", "責任"] },
             { zh: "累的時候，想想當初為什麼開始。", en: "When you're tired, remember why you started.", tags: ["堅持", "初衷"] },
             { zh: "發過光的人，請你不要黯淡。", en: "Those who have shined, please do not fade.", tags: ["希望", "信念"] },
             { zh: "墮落和努力一樣都會上癮。", en: "Falling and striving are both addictive.", tags: ["哲理", "成長"] },
             { zh: "那些不能殺死我的，都將使我更堅強。", en: "What doesn't kill me makes me stronger.", tags: ["成長", "堅強"] },
             { zh: "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。", en: "Growth never comes from material accumulation, but from the gentle protection in your heart to blaze your own trail.", tags: ["成長", "哲理"] },
-            { zh: "日子嘛，縫縫補補還能過。", en: "Life is like that, patching it up, it can still go on.", tags: ["希望", "信念"] },
+            { zh: "日子嘛，縫縫補補還能過。", en: "Life is like that, patching it up, it can still go on.", tags: ["希望", "生活"] },
             { zh: "這個世界，有個很棒的人，他正在讀這句話。", en: "There is a wonderful person in this world, and they are reading this sentence.", tags: ["希望", "信念"] },
             { zh: "親愛的，沒關係，混亂也是成長的一部份。", en: "Dear, it's okay, chaos is also a part of growth.", tags: ["成長", "希望"] },
             { zh: "變好的過程，通常都不會太舒服。", en: "The process of getting better is usually uncomfortable.", tags: ["成長", "堅持"] },
             { zh: "別忘記走上這一條路的初衷是甚麼，不能在遙途中迷失自己的方向。", en: "Don't forget the initial reason for walking this path, and don't lose your direction on the long journey.", tags: ["堅持", "目標"] },
-            { zh: "失落並不丟臉，它代表你還在乎。", en: "Being lost is not shameful; it means you still care.", tags: ["哲理", "信念"] },
-            { zh: "生活是一千次崩潰，一千零一次挺住。", en: "Life is a thousand breakdowns and a thousand and one times standing firm.", tags: ["堅持", "希望"] },
+            { zh: "失落並不丟臉，它代表你還在乎。", en: "Being lost is not shameful; it means you still care.", tags: ["哲理", "情緒"] },
+            { zh: "生活是一千次崩潰，一千零一次挺住。", en: "Life is a thousand breakdowns and a thousand and one times standing firm.", tags: ["堅持", "生活"] },
             { zh: "不要眼眶一紅，就覺得人間不值得。", en: "Don't feel the world is unworthy just because your eyes turn red.", tags: ["信念", "哲理"] },
-            { zh: "允許自己是那朵晚開的花。", en: "Allow yourself to be the late blooming flower.", tags: ["哲理", "信念", "成功"] },
+            { zh: "允許自己是那朵晚開的花。", en: "Allow yourself to be the late blooming flower.", tags: ["哲理", "時間"] },
             { zh: "撐過就是你的。", en: "Endure it, and it will be yours.", tags: ["堅持", "成功"] },
             { zh: "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。", en: "The truly brave person is one who who continues to run, even with tears in their eyes.", tags: ["堅持", "行動"] },
             { zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。", en: "If there really is a miracle in this world, it is just another name for effort.", tags: ["成功", "信念"] },
@@ -353,9 +351,9 @@
         let quoteCount = 0; 
         
         // ----------------------------------------------------
-        // 1. 定義主分類標籤 (手動定義，確保只有 7 個，廢話文學不加入)
+        // 1. 定義主分類標籤 (已新增 "廢話文學")
         // ----------------------------------------------------
-        const mainTags = ["行動", "堅持", "成長", "信念", "哲理", "希望", "成功"];
+        const mainTags = ["行動", "堅持", "成長", "信念", "哲理", "希望", "成功", "廢話文學"];
 
 
         // ----------------------------------------------------
@@ -392,19 +390,19 @@
         }
         
         // ----------------------------------------------------
-        // 3. 建立標籤篩選按鈕 (保持不變：只使用 7 個 mainTags)
+        // 3. 建立標籤篩選按鈕 (現在會創建 8 個主標籤按鈕)
         // ----------------------------------------------------
         function createTagButtons() {
             // 1. 加入 #隨機 按鈕
             const randomBtn = document.createElement('button');
-            randomBtn.className = 'filter-button selected';
+            randomBtn.className = 'filter-button selected'; 
             randomBtn.textContent = '#隨機';
             randomBtn.dataset.tag = '#隨機';
             randomBtn.addEventListener('click', handleTagClick);
             tagButtonsContainer.appendChild(randomBtn);
             currentSelectedTags.add('#隨機'); 
             
-            // 2. 加入所有主分類標籤按鈕 (只使用 mainTags 陣列)
+            // 2. 加入所有主分類標籤按鈕 (包含廢話文學)
             mainTags.forEach(tag => {
                 const button = document.createElement('button');
                 button.className = 'filter-button';
@@ -460,7 +458,8 @@
                 }
             }
             
-            generateRandomQuote();
+            // 每次點擊標籤後自動生成新句子
+            generateRandomQuote(); 
         }
 
         // ----------------------------------------------------
@@ -472,9 +471,7 @@
             if (currentSelectedTags.has('#隨機')) {
                 availableQuotes = quotes;
             } else {
-                // 篩選邏輯：只要句子的任一標籤符合選中的主分類，就選入
                 availableQuotes = quotes.filter(quote => {
-                    // quote.tags 必須包含 currentSelectedTags 中的任一標籤
                     return quote.tags.some(tag => currentSelectedTags.has(tag));
                 });
             }
@@ -502,20 +499,30 @@
             const randomColorIndex = Math.floor(Math.random() * softColors.length);
             quoteText.style.color = softColors[randomColorIndex];
             
+            // 應用淡入動畫
             quoteText.style.animation = 'none';
-            quoteText.offsetHeight; 
+            void quoteText.offsetHeight; // 觸發重繪
             quoteText.style.animation = 'fadeIn 0.8s ease-out';
 
             // 顯示句子
             const fullText = randomQuoteObj.zh + (randomQuoteObj.en ? `**${randomQuoteObj.en}**` : '');
             quoteText.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
-            // 顯示句子本身的標籤 (使用句子中定義的所有標籤)
+            // 顯示句子本身的標籤
             const tagsHTML = randomQuoteObj.tags.map(tag => `<span class="tag-display">#${tag}</span>`).join('');
             quoteFooterDiv.innerHTML = tagsHTML;
             
-            quoteCount++;
-            saveQuoteCount();
+            // 只有當按鈕被點擊時才增加計數，避免初始載入時就加 1
+            if (document.activeElement === generateButton || document.activeElement.classList.contains('filter-button')) {
+                quoteCount++;
+                saveQuoteCount();
+            } else if (quoteCount === 0) {
+                // 處理首次載入時的計數顯示（如果計數為 0，載入時顯示第一句）
+                if (localStorage.getItem('quoteGeneratorData') === null || JSON.parse(localStorage.getItem('quoteGeneratorData')).date !== getTodayDate()) {
+                    quoteCount = 1;
+                    saveQuoteCount();
+                }
+            }
         }
 
 
@@ -524,7 +531,8 @@
         // ----------------------------------------------------
         window.onload = function() {
             loadQuoteCount(); 
-            createTagButtons(); // 只創建 8 個按鈕
+            createTagButtons(); 
+            // 確保網頁載入時立刻顯示第一句金句
             generateRandomQuote(); 
         }
 
