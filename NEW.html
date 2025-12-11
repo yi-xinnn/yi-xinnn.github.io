@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>隨機句子產生器 - 分類標籤優化</title>
-    <link rel="icon" href="擷取.PNG">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
@@ -215,8 +214,10 @@
             </button>
         </div>
     </footer>
-    
-    const quotes = [
+
+    <script>
+        // *** 這是程式碼關鍵區塊：句子庫定義 (請將第 2 部分的完整句子庫貼到這裡) ***
+        const quotes = [
             { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "夢想"] },
             { zh: "心態決定狀態。", en: "Attitude determines altitude.", tags: ["信念", "哲理"] },
             { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["責任", "成長"] },
@@ -314,11 +315,10 @@
             { zh: "每一位偉大的夢想都來自於勇敢做夢的人。", en: "Every great dream begins with a dreamer. Always remember, you have within you the strength, the patience, and the passion to reach for the stars to change the world.", tags: ["夢想", "力量"] },
             { zh: "事情會改變，朋友會離去。生命不會為了任何人而停歇。", en: "Things change. And friends leave. Life doesn’t stop for anybody.", tags: ["哲理", "無常"] },
             { zh: "事情不是足以改變世界才算重要。", en: "Things don’t have to change the world to be important.", tags: ["哲理", "價值"] }
-
-            
         ];
 
-      const quoteText = document.getElementById('quote-text');
+
+        const quoteText = document.getElementById('quote-text');
         const quoteFooterDiv = document.getElementById('quote-footer');
         const generateButton = document.getElementById('generate-button');
         const tagButtonsContainer = document.getElementById('tag-buttons');
