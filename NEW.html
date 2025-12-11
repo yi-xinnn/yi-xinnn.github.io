@@ -1,236 +1,306 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>隨機句子產生器 - 計數器與滾動條</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>隨機句子產生器 - 每日金句 + 粒子 + 搜尋標籤</title>
     <link rel="icon" href="擷取.PNG">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap">
+
     <style>
-        /* 定義淡入動畫 */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ---------- 基本與動畫 ---------- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes sparkleMove { from { transform: translateY(0) scale(0.6); opacity: 1;} to { transform: translateY(-40px) scale(1.2); opacity: 0;} }
+        @keyframes shine { 0% { left: -120%; } 60% { left: 120%; } 100% { left: 120%; } }
+
+        :root{
+            --bg1: #E8CEE0;
+            --accent: #A0527F;
+            --accent-2: #8B457A;
+            --muted: #D3B8CC;
+            --card-bg: rgba(255,255,255,0.72);
+            --tag-bg: #F5E8EE;
+            --soft-1: #5C3A55;
+            --soft-2: #A0527F;
+            --soft-3: #8B457A;
         }
 
-        body {
-            /* 背景和星空 */
-            background: #E8CEE0; 
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#E8CEE0"/><circle cx="10" cy="10" r="0.2" fill="#AF93A8"/><circle cx="90" cy="50" r="0.3" fill="#D3B8CC"/><circle cx="50" cy="90" r="0.4" fill="#AF93A8"/><circle cx="25" cy="70" r="0.15" fill="#D3B8CC"/><circle cx="75" cy="30" r="0.25" fill="#AF93A8"/><circle cx="40" cy="20" r="0.1" fill="#D3B8CC"/><circle cx="80" cy="80" r="0.35" fill="#AF93A8"/></svg>'); 
-            background-size: cover; 
-            background-attachment: fixed; 
-            
-            color: #333; 
-            font-family: 'Noto Serif TC', serif; 
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
+        html,body{
+            height:100%;
+            margin:0;
+            font-family: 'Noto Serif TC', serif;
+            background: var(--bg1);
+            overflow-x:hidden;
+        }
+
+        /* canvas 背景蓋在最下方 */
+        #star-canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width:100%;
+            height:100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 主要容器置於 canvas 之上 */
+        .page {
+            position: relative;
+            z-index: 2;
             min-height: 100vh;
-            margin: 0;
-            text-align: center;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
             padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align:center;
+            margin-top: 8px;
         }
 
         h1 {
-            /* 標題樣式 - 漸層色 */
-            font-family: 'Noto Serif TC', serif;
-            font-weight: 700; 
-            margin: 20px 0 10px 0; /* 縮小與計數器間距 */
-            font-size: 2.8em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(45deg, #FF69B4, #8B457A, #FFD700); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
+            font-weight:700;
+            margin:10px 0 6px 0;
+            font-size:2.6rem;
+            background: linear-gradient(45deg, #FF69B4, #8B457A, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.08);
         }
 
-        /* 新增：計數器樣式 */
         #count-display {
-            font-size: 1.1em;
-            color: #8B457A;
-            margin-bottom: 30px;
-            padding: 5px 15px;
-            background-color: rgba(255, 255, 255, 0.6);
-            border-radius: 8px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom:12px;
+            font-size:1.05rem;
+            color: var(--accent-2);
+            background: rgba(255,255,255,0.55);
+            padding:6px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display:inline-block;
         }
 
-        #quote-box {
-            /* 句子容器 */
-            max-width: 800px;
-            background-color: rgba(255, 255, 255, 0.8); 
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); 
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
+        main {
+            width:100%;
+            max-width: 980px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:18px;
+            margin-top:8px;
         }
+
+        /* 句子卡片 (霧玻璃) */
+        #quote-box {
+            width:100%;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 36px 28px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            min-height: 140px;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            transition: transform 0.28s ease;
+            backdrop-filter: blur(8px) saturate(1.05);
+            -webkit-backdrop-filter: blur(8px) saturate(1.05);
+            position: relative;
+            overflow: visible;
+        }
+
+        /* 當有 pop 類別時做微放大效果 */
+        #quote-box.pop { transform: scale(1.02); }
 
         #quote-text {
-            /* 句子文字的樣式 */
-            font-size: 1.8em;
-            line-height: 1.6;
-            margin: 0 0 10px 0; 
-            color: #333; 
-            font-family: 'Noto Serif TC', 'Barrels Bold', sans-serif; 
-            animation: fadeIn 0.8s ease-out; 
-        }
-
-        /* 句子下方的標籤區塊 */
-        #quote-footer {
-            margin-top: 15px;
-            min-height: 20px; 
-        }
-        .tag-display {
-            display: inline-block;
-            background-color: #F5E8EE; 
-            border-radius: 5px;
-            padding: 3px 8px;
-            margin: 0 5px 5px 0;
-            color: #8B457A; 
-            font-family: 'Noto Serif TC', sans-serif;
-            font-size: 0.9em;
-            font-weight: 500;
-        }
-
-        /* --- 篩選按鈕區塊樣式 --- */
-        #filter-container {
+            font-size:1.65rem;
+            line-height:1.6;
+            margin:0;
+            color: #333;
+            animation: fadeIn 0.8s ease-out;
+            text-align:center;
             max-width: 900px;
-            width: 90%;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            word-break:break-word;
         }
 
-        #filter-container h2 {
-            font-size: 1.2em;
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #5C3A55;
-            font-weight: 500;
+        strong { font-family: 'Barrels Bold', sans-serif; display:block; margin-top:10px; font-size:0.85rem; }
+
+        #quote-footer { margin-top:12px; min-height:22px; display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+
+        .tag-display {
+            display:inline-block;
+            background: var(--tag-bg);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size:0.92rem;
+            color: var(--accent-2);
         }
 
-        /* **關鍵修改：限制高度並加入滾動條** */
+        /* 控制區 (filter + button) */
+        #controls-wrapper {
+            width:100%;
+            max-width: 980px;
+            display:flex;
+            gap:18px;
+            align-items:flex-start;
+            justify-content:center;
+        }
+
+        #filter-container {
+            flex:1;
+            background: rgba(255,255,255,0.55);
+            padding:12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+            min-width: 260px;
+            max-height: 160px;
+            overflow: hidden;
+        }
+
+        #filter-container h2 { margin:0 0 8px 0; font-size:1.05rem; color: var(--soft-1); font-weight:500; }
+
+        #tag-search {
+            width:100%;
+            padding:8px 10px;
+            margin-bottom:8px;
+            border-radius:8px;
+            border:1px solid rgba(0,0,0,0.06);
+            outline:none;
+            box-sizing:border-box;
+        }
+
         #tag-buttons {
-            max-height: 120px; /* 限制高度約為兩到三排按鈕的高度 */
-            overflow-y: auto; /* 垂直滾動 */
-            padding-right: 5px; /* 避免滾動條擋住文字 */
+            max-height:90px;
+            overflow-y:auto;
+            padding-right:6px;
         }
-        /* -------------------------------------- */
-
 
         .filter-button {
-            background-color: #F5E8EE; 
-            color: #8B457A; 
-            border: 1px solid #D3B8CC;
-            border-radius: 20px;
-            padding: 5px 12px;
-            margin: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Noto Serif TC', sans-serif;
-            font-size: 0.9em;
-            /* 讓按鈕可以換行 */
-            display: inline-block; 
-        }
-        
-        .filter-button:hover {
-            background-color: #E3A3C9;
-            color: #FFF;
+            background: var(--tag-bg);
+            color: var(--accent-2);
+            border:1px solid var(--muted);
+            border-radius:20px;
+            padding:6px 12px;
+            margin:5px 6px 6px 0;
+            cursor:pointer;
+            transition: all 0.18s;
+            display:inline-block;
+            font-size:0.92rem;
+            white-space:nowrap;
         }
 
-        /* 標籤被選中時的樣式 */
-        .filter-button.selected {
-            background-color: #A0527F; 
-            color: #FFF;
-            border-color: #8B457A;
-            box-shadow: 0 0 5px rgba(160, 82, 127, 0.5);
-        }
-        
-        /* 圓形按鈕和篩選區並排的容器 */
-        #controls-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px; 
-            width: 90%;
-            max-width: 800px;
-            margin-top: 20px;
-        }
+        .filter-button:hover { transform: translateY(-3px); background:#E3A3C9; color:#fff; }
+        .filter-button.selected { background: var(--accent); color:#fff; border-color: var(--accent-2); box-shadow: 0 0 8px rgba(160,82,127,0.4); }
 
-        /* 圓形按鈕 */
+        /* 圓形 GO 按鈕 */
         #generate-button {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%; 
-            background-color: #A0527F; 
-            color: #FFF;
-            border: 5px solid #E3A3C9; 
-            font-size: 1.5em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px #FFD700, 0 0 20px #E3A3C9, 0 0 30px #A0527F;
-            z-index: 10; 
-            flex-shrink: 0; 
+            width:110px;
+            height:110px;
+            border-radius:50%;
+            background: var(--accent);
+            border:5px solid #E3A3C9;
+            color:#fff;
+            font-size:1.25rem;
+            font-weight:700;
+            cursor:pointer;
+            box-shadow: 0 0 12px #FFD700, 0 0 20px #E3A3C9, 0 0 30px var(--accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            flex-shrink:0;
+            transition: transform 0.18s ease;
+            outline:none;
         }
 
-        #generate-button:hover {
-            background-color: #8B457A; 
-            box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 35px rgba(227, 163, 201, 1);
-            transform: scale(1.1); 
+        #generate-button:hover { transform: scale(1.07); }
+        #generate-button:active { transform: scale(0.96); }
+
+        /* 閃光掃描 */
+        #generate-button::after {
+            content:"";
+            position:absolute;
+            left:-150%;
+            top:0;
+            width:150%;
+            height:100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: skewX(-20deg);
+            animation: shine 2.8s infinite;
+            pointer-events:none;
         }
 
-        #generate-button:active {
-            transform: scale(0.95); 
+        /* 手機響應 */
+        @media (max-width:720px) {
+            #controls-wrapper { flex-direction: column; align-items:center; gap:12px; }
+            #filter-container { width:92%; max-width:640px; }
+            #generate-button { width:88px; height:88px; font-size:1.05rem; }
+            #quote-text { font-size:1.25rem; padding:0 8px; }
         }
 
-        /* 英文粗體樣式 */
-        strong {
-            font-family: 'Barrels Bold', sans-serif;
-            font-weight: normal; 
-            display: block; 
-            margin-top: 10px;
-            font-size: 0.8em; 
-            color: inherit; 
+        /* sparkles (生成時的星光元素) */
+        .sparkle {
+            position:absolute;
+            width:8px;
+            height:8px;
+            border-radius:50%;
+            pointer-events:none;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,1) 0%, rgba(255,255,255,0.7) 10%, rgba(160,82,127,0.25) 40%, rgba(160,82,127,0) 60%);
+            animation: sparkleMove 700ms ease-out forwards;
+            z-index: 5;
+            filter: blur(0.6px);
         }
+
+        /* 今日金句小角標 */
+        .badge-daily {
+            position:absolute;
+            top:12px;
+            left:12px;
+            background: linear-gradient(90deg,#FFD700,#FFA07A);
+            padding:6px 10px;
+            border-radius:12px;
+            font-weight:600;
+            font-size:0.9rem;
+            color:#4b2a2a;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.16);
+        }
+
     </style>
 </head>
 <body>
+    <!-- 粒子 canvas -->
+    <canvas id="star-canvas"></canvas>
 
-    <header>
-        <h1>🌸 隨機句子產生器 🕯️</h1>
-        <div id="count-display">您今天已獲得 <span id="quote-count">0</span> 句力量 💪</div>
-    </header>
+    <div class="page">
+        <header>
+            <h1>🌸 隨機句子產生器 🕯️</h1>
+            <div id="count-display">您今天已獲得 <span id="quote-count">0</span> 句力量 💪</div>
+        </header>
 
-    <main>
-        <div id="quote-box">
-            <p id="quote-text">請先選擇您喜歡的句子類型！</p>
-            <div id="quote-footer"></div> 
-        </div>
-    </main>
-
-    <footer>
-        <div id="controls-wrapper">
-            <div id="filter-container">
-                <h2>選擇句子類型 (可多選 1~3 項)：</h2>
-                <div id="tag-buttons">
-                    </div>
+        <main>
+            <div id="quote-box" aria-live="polite">
+                <div class="badge-daily" id="daily-badge" style="display:none">今日金句</div>
+                <p id="quote-text">請先選擇您喜歡的句子類型！</p>
+                <div id="quote-footer"></div>
             </div>
 
-            <button id="generate-button" aria-label="生成新句子">
-                <span>GO!</span>
-            </button>
-        </div>
-    </footer>
+            <div id="controls-wrapper">
+                <div id="filter-container" aria-label="篩選標籤">
+                    <h2>選擇句子類型 (可多選 1~3 項)：</h2>
+                    <input type="search" id="tag-search" placeholder="🔎 搜尋標籤..." aria-label="搜尋標籤">
+                    <div id="tag-buttons"></div>
+                </div>
+
+                <button id="generate-button" aria-label="生成新句子">
+                    <span>GO!</span>
+                </button>
+            </div>
+        </main>
+    </div>
     
     <script>
         // 包含句子、英文和標籤的物件陣列 (已整合所有句子)
@@ -341,196 +411,355 @@
         const quoteFooterDiv = document.getElementById('quote-footer');
         const generateButton = document.getElementById('generate-button');
         const tagButtonsContainer = document.getElementById('tag-buttons');
-        const quoteCountDisplay = document.getElementById('quote-count'); // 新增：計數器顯示元素
+        const quoteCountDisplay = document.getElementById('quote-count');
+        const tagSearchInput = document.getElementById('tag-search');
+        const quoteBox = document.getElementById('quote-box');
+        const dailyBadge = document.getElementById('daily-badge');
 
-        const softColors = ['#5C3A55', '#A0527F', '#8B457A', '#333']; 
-        let currentSelectedTags = new Set(); 
-        let lastQuote = null; 
-        let quoteCount = 0; // 當日句子計數
-        
-        // 取得所有不重複的標籤
+        const softColors = ['#5C3A55', '#A0527F', '#8B457A', '#333'];
+        let currentSelectedTags = new Set();
+        let lastQuote = null;
+        let quoteCount = 0;
+        let dailyQuoteIndex = null; // 當天固定的今日金句 index
+
+        // 取得所有不重複標籤
         const allTags = new Set();
-        quotes.forEach(q => q.tags.forEach(tag => allTags.add(tag)));
-        const sortedTags = Array.from(allTags).sort(); 
+        quotes.forEach(q => q.tags.forEach(t => allTags.add(t)));
+        const sortedTags = Array.from(allTags).sort();
 
-        // ----------------------------------------------------
-        // 1. 計數器相關函數
-        // ----------------------------------------------------
-
-        // 取得今天的日期字串 (YYYY-MM-DD)
+        /********** 日期與 LocalStorage（保留計數 + 當日金句） **********/
         function getTodayDate() {
-            return new Date().toISOString().slice(0, 10);
+            // 使用本地時區的 YYYY-MM-DD
+            const d = new Date();
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth()+1).padStart(2,'0');
+            const dd = String(d.getDate()).padStart(2,'0');
+            return `${yyyy}-${mm}-${dd}`;
         }
 
-        // 從 LocalStorage 加載計數
-        function loadQuoteCount() {
+        // storage 結構： { date: 'YYYY-MM-DD', count: Number, dailyIndex: Number }
+        function loadQuoteData() {
+            const stored = localStorage.getItem('quoteGeneratorData');
             const today = getTodayDate();
-            const storedData = localStorage.getItem('quoteGeneratorData');
-            
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                if (data.date === today) {
-                    quoteCount = data.count;
-                } else {
-                    // 如果日期不一致，表示今天是新的一天，計數歸零
-                    quoteCount = 0;
-                    saveQuoteCount();
-                }
+
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    if (data.date === today) {
+                        quoteCount = data.count || 0;
+                        dailyQuoteIndex = (typeof data.dailyIndex === 'number') ? data.dailyIndex : null;
+                    } else {
+                        // 新的一天：重設 count 並設定 dailyIndex 為 null（會在初始化時建立）
+                        quoteCount = 0;
+                        dailyQuoteIndex = null;
+                        saveQuoteData(); // 更新 storage
+                    }
+                } catch(e) { quoteCount = 0; dailyQuoteIndex = null; saveQuoteData(); }
+            } else {
+                // 沒有紀錄
+                quoteCount = 0;
+                dailyQuoteIndex = null;
+                saveQuoteData();
             }
             quoteCountDisplay.textContent = quoteCount;
         }
 
-        // 保存計數到 LocalStorage
-        function saveQuoteCount() {
-            const today = getTodayDate();
+        function saveQuoteData() {
             const data = {
-                date: today,
-                count: quoteCount
+                date: getTodayDate(),
+                count: quoteCount,
+                dailyIndex: dailyQuoteIndex
             };
             localStorage.setItem('quoteGeneratorData', JSON.stringify(data));
             quoteCountDisplay.textContent = quoteCount;
         }
 
-        // ----------------------------------------------------
-        // 2. 建立標籤篩選按鈕 (與上次相同)
-        // ----------------------------------------------------
+        /********** 建立標籤按鈕（包含 #隨機） **********/
         function createTagButtons() {
-            // 加入 #隨機 按鈕
+            // #隨機 按鈕
             const randomBtn = document.createElement('button');
             randomBtn.className = 'filter-button selected';
             randomBtn.textContent = '#隨機';
             randomBtn.dataset.tag = '#隨機';
             randomBtn.addEventListener('click', handleTagClick);
             tagButtonsContainer.appendChild(randomBtn);
-            currentSelectedTags.add('#隨機'); 
-            
-            // 加入所有其他標籤按鈕
+            currentSelectedTags.add('#隨機');
+
+            // 其餘標籤
             sortedTags.forEach(tag => {
-                const button = document.createElement('button');
-                button.className = 'filter-button';
-                button.textContent = `#${tag}`;
-                button.dataset.tag = tag;
-                button.addEventListener('click', handleTagClick);
-                tagButtonsContainer.appendChild(button);
+                const btn = document.createElement('button');
+                btn.className = 'filter-button';
+                btn.textContent = `#${tag}`;
+                btn.dataset.tag = tag;
+                btn.addEventListener('click', handleTagClick);
+                tagButtonsContainer.appendChild(btn);
             });
         }
 
-        // ----------------------------------------------------
-        // 3. 處理標籤點擊事件 (與上次相同)
-        // ----------------------------------------------------
-        function handleTagClick(event) {
-            const clickedTag = event.target.dataset.tag;
-            const isSelected = event.target.classList.contains('selected');
-            const maxSelection = 3;
+        /********** 標籤點擊處理（限制最多3個，支援 #隨機） **********/
+        function handleTagClick(e) {
+            const btn = e.currentTarget;
+            const clickedTag = btn.dataset.tag;
+            const isSelected = btn.classList.contains('selected');
+            const maxSel = 3;
             const randomBtn = document.querySelector('[data-tag="#隨機"]');
-            
+
             if (clickedTag === '#隨機') {
                 if (!isSelected) {
                     currentSelectedTags.clear();
                     currentSelectedTags.add('#隨機');
-                    document.querySelectorAll('.filter-button').forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
-                    event.target.classList.add('selected');
+                    document.querySelectorAll('.filter-button').forEach(x => x.classList.remove('selected'));
+                    btn.classList.add('selected');
                 } else {
-                    return; 
+                    // 若已選就不做任何事
+                    return;
                 }
             } else {
                 if (isSelected) {
-                    event.target.classList.remove('selected');
+                    btn.classList.remove('selected');
                     currentSelectedTags.delete(clickedTag);
                 } else {
-                    if (currentSelectedTags.has('#隨機') || currentSelectedTags.size < maxSelection) {
+                    if (currentSelectedTags.has('#隨機') || currentSelectedTags.size < maxSel) {
                         if (currentSelectedTags.has('#隨機')) {
                             currentSelectedTags.delete('#隨機');
                             randomBtn.classList.remove('selected');
                         }
-                        
-                        event.target.classList.add('selected');
+                        btn.classList.add('selected');
                         currentSelectedTags.add(clickedTag);
                     } else {
-                        alert(`最多只能選擇 ${maxSelection} 個標籤！`);
+                        alert(`最多只能選擇 ${maxSel} 個標籤！`);
                         return;
                     }
                 }
-                
+
+                // 若都沒選，回復 #隨機
                 if (currentSelectedTags.size === 0) {
                     currentSelectedTags.add('#隨機');
                     randomBtn.classList.add('selected');
                 }
             }
-            
+
+            // 變更篩選時可以立即生成新句（可修改為不自動）
             generateRandomQuote();
         }
 
-        // ----------------------------------------------------
-        // 4. 核心生成邏輯 (更新：增加計數)
-        // ----------------------------------------------------
-        function generateRandomQuote() {
+        /********** 標籤搜尋功能（即時過濾按鈕） **********/
+        tagSearchInput.addEventListener('input', (e) => {
+            const q = e.target.value.trim().toLowerCase();
+            document.querySelectorAll('#tag-buttons .filter-button').forEach(btn => {
+                // 不過濾 #隨機 按鈕
+                if (btn.dataset.tag === '#隨機') return;
+                const text = btn.textContent.toLowerCase();
+                if (text.indexOf(q) !== -1) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                    // 若被隱藏且是選中狀態，取消選取
+                    if (btn.classList.contains('selected')) {
+                        btn.classList.remove('selected');
+                        currentSelectedTags.delete(btn.dataset.tag);
+                    }
+                }
+            });
+
+            // 若搜尋把所有標籤都隱藏（只剩 #隨機），確保至少一個選取
+            if ([...currentSelectedTags].filter(t => t !== '#隨機').length === 0) {
+                const randomBtn = document.querySelector('[data-tag="#隨機"]');
+                currentSelectedTags.clear();
+                currentSelectedTags.add('#隨機');
+                document.querySelectorAll('.filter-button').forEach(x => x.classList.remove('selected'));
+                randomBtn.classList.add('selected');
+            }
+        });
+
+        /********** 生成邏輯（會更新計數） **********/
+        function generateRandomQuote(showSparkles = true) {
             let availableQuotes = [];
 
             if (currentSelectedTags.has('#隨機')) {
                 availableQuotes = quotes;
             } else {
-                availableQuotes = quotes.filter(quote => {
-                    return quote.tags.some(tag => currentSelectedTags.has(tag));
-                });
+                availableQuotes = quotes.filter(q => q.tags.some(t => currentSelectedTags.has(t)));
             }
 
             if (availableQuotes.length === 0) {
-                quoteText.innerHTML = "找不到符合所選標籤的句子，請更改選擇。";
+                quoteText.textContent = "找不到符合所選標籤的句子，請更改選擇。";
                 quoteFooterDiv.innerHTML = "";
                 lastQuote = null;
                 return;
             }
-            
+
+            // 若有設定今日金句且我們尚未明確要求「非今日金句」，則預設顯示今日金句（只有在載入頁面時會特別處理）
+            // 這裡的 generateRandomQuote 會用一般機制（隨機），但 onload 時會另行顯示 dailyQuote
             let randomQuoteObj;
             let newIndex;
             let attempts = 0;
-            const maxAttempts = 10; 
-            
+            const maxAttempts = 12;
+
             do {
                 newIndex = Math.floor(Math.random() * availableQuotes.length);
                 randomQuoteObj = availableQuotes[newIndex];
                 attempts++;
             } while (randomQuoteObj === lastQuote && availableQuotes.length > 1 && attempts < maxAttempts);
 
-            lastQuote = randomQuoteObj; 
+            lastQuote = randomQuoteObj;
 
-            // 隨機選取文字顏色
+            // 隨機文字顏色
             const randomColorIndex = Math.floor(Math.random() * softColors.length);
             quoteText.style.color = softColors[randomColorIndex];
-            
+
             // 重設動畫
             quoteText.style.animation = 'none';
-            quoteText.offsetHeight; 
+            void quoteText.offsetHeight;
             quoteText.style.animation = 'fadeIn 0.8s ease-out';
 
-            // 1. 顯示句子 
-            const fullText = randomQuoteObj.zh + (randomQuoteObj.en ? `**${randomQuoteObj.en}**` : ''); // 判斷英文是否為空
+            // 顯示文字與英文（英文以 <strong> 標出）
+            const fullText = randomQuoteObj.zh + (randomQuoteObj.en ? `**${randomQuoteObj.en}**` : '');
             quoteText.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            // 2. 顯示標籤
-            const tagsHTML = randomQuoteObj.tags.map(tag => `<span class="tag-display">#${tag}</span>`).join('');
-            quoteFooterDiv.innerHTML = tagsHTML;
-            
-            // **新增：計數器更新**
+
+            // 顯示標籤
+            quoteFooterDiv.innerHTML = randomQuoteObj.tags.map(t => `<span class="tag-display">#${t}</span>`).join('');
+
+            // 計數更新
             quoteCount++;
-            saveQuoteCount();
+            saveQuoteData();
+
+            // 小動畫效果：卡片 pop + 星光
+            quoteBox.classList.add('pop');
+            setTimeout(()=> quoteBox.classList.remove('pop'), 300);
+
+            if (showSparkles) createSparkles(12);
         }
 
+        /********** 今日金句（方案 A）初始化顯示 **********/
+        function ensureDailyQuoteAndShow() {
+            // 若 dailyQuoteIndex 為 null，則於今日第一次載入時隨機挑一個 index 並儲存
+            if (dailyQuoteIndex === null) {
+                dailyQuoteIndex = Math.floor(Math.random() * quotes.length);
+                saveQuoteData();
+                // 顯示 badge（代表今天已選一組今日金句）
+                showDailyQuote();
+            } else {
+                // 已有今日金句，直接顯示
+                showDailyQuote();
+            }
+        }
 
-        // ----------------------------------------------------
-        // 5. 網頁加載時初始化
-        // ----------------------------------------------------
-        window.onload = function() {
-            loadQuoteCount(); // 加載歷史計數
+        function showDailyQuote() {
+            if (typeof dailyQuoteIndex === 'number' && quotes[dailyQuoteIndex]) {
+                const q = quotes[dailyQuoteIndex];
+                // 顯示且標示為今日金句（badge）
+                quoteText.innerHTML = q.zh + (q.en ? ` <strong>${q.en}</strong>` : '');
+                quoteFooterDiv.innerHTML = q.tags.map(t => `<span class="tag-display">#${t}</span>`).join('');
+                lastQuote = q;
+                dailyBadge.style.display = 'block';
+                // 讓每日金句不算入當日計數，除非使用者按 GO!（這是設計選項）
+                // 若你想要在顯示今日金句時也把 count++，把下面註解解除：
+                // quoteCount++; saveQuoteData();
+            }
+        }
+
+        /********** 生成時星光效果（簡單 DOM sparkles） **********/
+        function createSparkles(n) {
+            const rect = quoteBox.getBoundingClientRect();
+            const container = document.body;
+            for (let i=0;i<n;i++){
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                // 隨機位置在 quoteBox 範圍內 (以 box 中心為基準小範圍)
+                const rx = rect.left + rect.width * (0.25 + Math.random()*0.5);
+                const ry = rect.top + rect.height * (0.2 + Math.random()*0.6);
+                s.style.left = (rx + (Math.random()*40 - 20)) + 'px';
+                s.style.top = (ry + (Math.random()*30 - 15)) + 'px';
+                // 隨機大小
+                const size = 6 + Math.random()*10;
+                s.style.width = s.style.height = size + 'px';
+                // 隨機延遲
+                s.style.animationDelay = (Math.random()*120) + 'ms';
+                container.appendChild(s);
+                setTimeout(()=> s.remove(), 900 + Math.random()*200);
+            }
+        }
+
+        /********** 初始化：載入資料 + 建立按鈕 + 顯示今日金句 **********/
+        function init() {
+            loadQuoteData();
             createTagButtons();
-            generateRandomQuote(); 
+
+            // 如果是第一次載入（dailyQuoteIndex null）或是已有 dailyQuote，確保先顯示今日金句作為預設
+            ensureDailyQuoteAndShow();
+
+            // 監聽 GO 按鈕
+            generateButton.addEventListener('click', ()=> {
+                // 當使用者按了 GO，視為「主動取得新句」，關閉今日 badge（still keep dailyQuoteIndex）
+                dailyBadge.style.display = 'none';
+                generateRandomQuote(true);
+            });
         }
 
-        // 監聽按鈕的點擊事件
-        generateButton.addEventListener('click', generateRandomQuote);
+        window.onload = init;
+
+        /********** 粒子背景 (canvas star rain) ---------- */
+        (function starCanvas(){
+            const canvas = document.getElementById('star-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let W = canvas.width = window.innerWidth;
+            let H = canvas.height = window.innerHeight;
+            const stars = [];
+            const STAR_COUNT = Math.max(40, Math.floor((W*H)/60000)); // 根據視窗大小調整星數
+
+            function rand(min,max){ return Math.random()*(max-min)+min; }
+            function initStars(){
+                stars.length = 0;
+                for (let i=0;i<STAR_COUNT;i++){
+                    stars.push({
+                        x: Math.random()*W,
+                        y: Math.random()*H,
+                        r: rand(0.3,1.1),
+                        vx: rand(-0.02,0.02),
+                        vy: rand(0.05,0.3),
+                        alpha: rand(0.2,0.95),
+                        twinkleSpeed: rand(0.002,0.015)
+                    });
+                }
+            }
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+                initStars();
+            }
+            window.addEventListener('resize', resize);
+
+            function draw(){
+                ctx.clearRect(0,0,W,H);
+                // 輕微漸層背景 (與 CSS 背景疊合)
+                // ctx.fillStyle = 'rgba(232,206,224,0.02)';
+                // ctx.fillRect(0,0,W,H);
+
+                for (let s of stars){
+                    s.x += s.vx;
+                    s.y += s.vy;
+                    if (s.y > H + 10) { s.y = -10; s.x = Math.random()*W; }
+                    if (s.x > W + 10) { s.x = -10; }
+                    if (s.x < -10) { s.x = W + 10; }
+                    // twinkle
+                    s.alpha += Math.sin(Date.now() * s.twinkleSpeed) * 0.003;
+                    s.alpha = Math.max(0.12, Math.min(1, s.alpha));
+                    ctx.beginPath();
+                    ctx.globalAlpha = s.alpha * 0.9;
+                    ctx.fillStyle = '#FFF';
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(draw);
+            }
+
+            initStars();
+            draw();
+        })();
     </script>
 </body>
 </html>
