@@ -8,16 +8,20 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
     <style>
-        /* 設定中文字體為思源宋體，英文字體為 TT Barrels 粗體，並設定淺藕粉色星空背景 */
+        /* 定義淡入動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body {
-            /* 啟用 #E8CEE0 淺藕粉色背景作為基礎 */
+            /* 背景和星空 */
             background: #E8CEE0; 
-            /* 簡單的 SVG 星星背景，使用深色星星來搭配淺色背景 */
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#E8CEE0"/><circle cx="10" cy="10" r="0.2" fill="#AF93A8"/><circle cx="90" cy="50" r="0.3" fill="#D3B8CC"/><circle cx="50" cy="90" r="0.4" fill="#AF93A8"/><circle cx="25" cy="70" r="0.15" fill="#D3B8CC"/><circle cx="75" cy="30" r="0.25" fill="#AF93A8"/><circle cx="40" cy="20" r="0.1" fill="#D3B8CC"/><circle cx="80" cy="80" r="0.35" fill="#AF93A8"/></svg>'); 
             background-size: cover; 
             background-attachment: fixed; 
             
-            color: #333; /* 淺色背景使用深色文字，確保可讀性 */
+            color: #333; 
             font-family: 'Noto Serif TC', serif; 
             display: flex;
             flex-direction: column;
@@ -30,25 +34,27 @@
         }
 
         h1 {
-            /* 標題樣式，使用深粉紫色來搭配背景 */
+            /* 標題樣式 - 漸層色 */
             font-family: 'Noto Serif TC', serif;
             font-weight: 700; 
-            color: #8B457A; /* 較深的粉紫色 */
             margin-bottom: 40px;
-            font-size: 2.5em;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* 輕微的陰影讓文字更突出 */
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, #FF69B4, #8B457A, #FFD700); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
         }
 
         #quote-box {
-            /* 句子生成器區域的容器 */
+            /* 句子容器 */
             max-width: 800px;
-            /* 淺色背景使用不透明的白色，但邊緣使用深色陰影 */
             background-color: rgba(255, 255, 255, 0.8); 
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* 讓盒子看起來浮起來 */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); 
             min-height: 150px;
             display: flex;
+            flex-direction: column; /* 讓文字和標籤垂直排列 */
             align-items: center;
             justify-content: center;
             margin-bottom: 50px;
@@ -58,9 +64,27 @@
             /* 句子文字的樣式 */
             font-size: 1.8em;
             line-height: 1.6;
-            margin: 0;
-            color: #333; /* 使用深灰色文字 */
+            margin: 0 0 10px 0; /* 底部留一點空間給標籤 */
+            color: #333; 
             font-family: 'Noto Serif TC', 'Barrels Bold', sans-serif; 
+            animation: fadeIn 0.8s ease-out; 
+        }
+
+        /* 新增：標籤區塊的樣式 */
+        #quote-tags {
+            margin-top: 15px;
+            min-height: 20px; /* 避免句子出現時高度跳動 */
+        }
+        .tag {
+            display: inline-block;
+            background-color: #F5E8EE; /* 淺色背景 */
+            border-radius: 5px;
+            padding: 3px 8px;
+            margin: 0 5px 5px 0;
+            color: #8B457A; /* 深色文字 */
+            font-family: 'Noto Serif TC', sans-serif;
+            font-size: 0.9em;
+            font-weight: 500;
         }
 
         /* 圓形按鈕 */
@@ -68,35 +92,35 @@
             width: 100px;
             height: 100px;
             border-radius: 50%; 
-            background-color: #A0527F; /* 柔和的玫瑰色 */
+            background-color: #A0527F; 
             color: #FFF;
-            border: 5px solid #E3A3C9; /* 淺粉色邊框 */
+            border: 5px solid #E3A3C9; 
             font-size: 1.5em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 10px #FFD700, 0 0 20px #E3A3C9, 0 0 30px #A0527F;
             z-index: 10; 
         }
 
         #generate-button:hover {
-            background-color: #8B457A; /* 滑鼠移上去顏色變深 */
-            box-shadow: 0 0 20px rgba(139, 69, 122, 0.8); /* 深粉紫色發光 */
-            transform: scale(1.05); 
+            background-color: #8B457A; 
+            box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 35px rgba(227, 163, 201, 1);
+            transform: scale(1.1); 
         }
 
         #generate-button:active {
             transform: scale(0.95); 
         }
 
-        /* 讓粗體（英文）部分可以更好地顯示 TT Barrels 粗體 */
+        /* 英文粗體樣式 */
         strong {
             font-family: 'Barrels Bold', sans-serif;
             font-weight: normal; 
             display: block; 
             margin-top: 10px;
             font-size: 0.8em; 
-            color: #5C3A55; /* 英文使用略深的顏色 */
+            color: inherit; 
         }
     </style>
 </head>
@@ -109,6 +133,7 @@
     <main>
         <div id="quote-box">
             <p id="quote-text">按下圓形按鈕，獲得一句話的力量！💪</p>
+            <div id="quote-tags"></div> 
         </div>
     </main>
 
@@ -119,55 +144,79 @@
     </footer>
 
     <script>
-        // 包含中英句子的陣列
+        // 包含句子、英文和標籤的物件陣列
         const quotes = [
-            "一直很想去做的事，去做了嗎？**Did you do the thing you always wanted to do?**",
-            "心態決定狀態。**Attitude determines altitude.**",
-            "給自己一個完整的交代，給別人一個經驗的成果。**Give yourself a full account, and others the fruit of experience.**",
-            "累的時候，想想當初為什麼開始。**When you're tired, remember why you started.**",
-            "發過光的人，請你不要黯淡。**Those who have shined, please do not fade.**",
-            "墮落和努力一樣都會上癮。**Falling and striving are both addictive.**",
-            "那些不能殺死我的，都將使我更堅強。**What doesn't kill me makes me stronger.**",
-            "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。**Growth never comes from material accumulation, but from the gentle protection in your heart to blaze your own trail.**",
-            "日子嘛，縫縫補補還能過。**Life is like that, patching it up, it can still go on.**",
-            "這個世界，有個很棒的人，他正在讀這句話。**There is a wonderful person in this world, and they are reading this sentence.**",
-            "親愛的，沒關係，混亂也是成長的一部份。**Dear, it's okay, chaos is also a part of growth.**",
-            "變好的過程，通常都不會太舒服。**The process of getting better is usually uncomfortable.**",
-            "別忘記走上這一條路的初衷是甚麼，不能在遙途中迷失自己的方向。**Don't forget the initial reason for walking this path, and don't lose your direction on the long journey.**",
-            "失落並不丟臉，它代表你還在乎。**Being lost is not shameful; it means you still care.**",
-            "生活是一千次崩潰，一千零一次挺住。**Life is a thousand breakdowns and a thousand and one times standing firm.**",
-            "不要眼眶一紅，就覺得人間不值得。**Don't feel the world is unworthy just because your eyes turn red.**",
-            "允許自己是那朵晚開的花。**Allow yourself to be the late blooming flower.**",
-            "撐過就是你的。**Endure it, and it will be yours.**",
-            "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。**The truly brave person is one who continues to run, even with tears in their eyes.**",
-            "如果這世界上真的有奇蹟，那只是努力的另一個名字。**If there really is a miracle in this world, it is just another name for effort.**",
-            "你可以假裝努力，但結果不會陪你演戲。**You can pretend to work hard, but the result won't play along.**",
-            "幸運來自你不為人知的努力。**Luck comes from your unseen effort.**",
-            "行動交給現在，結果交由時間。**Action belongs to the present, the outcome belongs to time.**",
-            "變好的過程，通常都不會太舒服。**The process of getting better is usually uncomfortable.**",
-            "每個人的花期不同，不必焦慮有人比你提前擁有。**Everyone has a different blooming period; don't be anxious that someone possesses things before you.**",
-            "不是每場雨都要撐傘，有些眼淚會讓花長出來。**Not every rain requires an umbrella; some tears help flowers grow.**",
-            "如果你覺得身處地獄，那還不快繼續往前走。**If you think you are in hell, why don't you keep going?**",
-            "心裡有選擇的話，堅定好了。**If you have a choice in your heart, stand firm.**",
-            "過程很累很苦，但夢想很清楚。**The process is tiring and bitter, but the dream is clear.**",
-            "努力過後，不是成功就是成長。**After effort, it's either success or growth.**",
-            "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。**Life never has the right choice, only the process of making your choice the right answer.**",
-            "當你夠強，是刀都往肩上扛。**When you are strong enough, you carry every knife on your shoulder.**",
-            "不要想著完美，而是好好過生活、過現在。**Don't aim for perfection, but live life well, live in the present.**",
-            "你撐過的每一個黑夜，都值得一點掌聲。**Every dark night you endure deserves a round of applause.**",
-            "我們都有各自的滾燙和冰霜。**We all have our own heat and frost.**"
+            { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "夢想", "反思"] },
+            { zh: "心態決定狀態。", en: "Attitude determines altitude.", tags: ["勵志", "哲理", "積極"] },
+            { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["自我期許", "成果", "責任"] },
+            { zh: "累的時候，想想當初為什麼開始。", en: "When you're tired, remember why you started.", tags: ["堅持", "初衷", "鼓勵"] },
+            { zh: "發過光的人，請你不要黯淡。", en: "Those who have shined, please do not fade.", tags: ["鼓勵", "自我價值", "閃耀"] },
+            { zh: "墮落和努力一樣都會上癮。", en: "Falling and striving are both addictive.", tags: ["哲理", "習慣", "反思"] },
+            { zh: "那些不能殺死我的，都將使我更堅強。", en: "What doesn't kill me makes me stronger.", tags: ["堅強", "挑戰", "成長"] },
+            { zh: "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。", en: "Growth never comes from material accumulation, but from the gentle protection in your heart to blaze your own trail.", tags: ["成長", "溫柔", "哲理"] },
+            { zh: "日子嘛，縫縫補補還能過。", en: "Life is like that, patching it up, it can still go on.", tags: ["生活", "豁達", "日常"] },
+            { zh: "這個世界，有個很棒的人，他正在讀這句話。", en: "There is a wonderful person in this world, and they are reading this sentence.", tags: ["溫暖", "鼓勵", "你"] },
+            { zh: "親愛的，沒關係，混亂也是成長的一部份。", en: "Dear, it's okay, chaos is also a part of growth.", tags: ["放鬆", "成長", "混亂"] },
+            { zh: "變好的過程，通常都不會太舒服。", en: "The process of getting better is usually uncomfortable.", tags: ["過程", "改變", "挑戰"] },
+            { zh: "別忘記走上這一條路的初衷是甚麼，不能在遙途中迷失自己的方向。", en: "Don't forget the initial reason for walking this path, and don't lose your direction on the long journey.", tags: ["初衷", "方向", "目標"] },
+            { zh: "失落並不丟臉，它代表你還在乎。", en: "Being lost is not shameful; it means you still care.", tags: ["情緒", "在乎", "自我接納"] },
+            { zh: "生活是一千次崩潰，一千零一次挺住。", en: "Life is a thousand breakdowns and a thousand and one times standing firm.", tags: ["生活", "堅持", "力量"] },
+            { zh: "不要眼眶一紅，就覺得人間不值得。", en: "Don't feel the world is unworthy just because your eyes turn red.", tags: ["情緒", "價值", "理性"] },
+            { zh: "允許自己是那朵晚開的花。", en: "Allow yourself to be the late blooming flower.", tags: ["時間", "節奏", "自我接納"] },
+            { zh: "撐過就是你的。", en: "Endure it, and it will be yours.", tags: ["堅持", "忍耐", "收穫"] },
+            { zh: "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。", en: "The truly brave person is one who continues to run, even with tears in their eyes.", tags: ["勇敢", "眼淚", "前進"] },
+            { zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。", en: "If there really is a miracle in this world, it is just another name for effort.", tags: ["奇蹟", "努力", "信念"] },
+            { zh: "你可以假裝努力，但結果不會陪你演戲。", en: "You can pretend to work hard, but the result won't play along.", tags: ["努力", "成果", "誠實"] },
+            { zh: "幸運來自你不為人知的努力。", en: "Luck comes from your unseen effort.", tags: ["幸運", "努力", "幕後"] },
+            { zh: "行動交給現在，結果交由時間。", en: "Action belongs to the present, the outcome belongs to time.", tags: ["行動", "時間", "現在"] },
+            { zh: "每個人的花期不同，不必焦慮有人比你提前擁有。", en: "Everyone has a different blooming period; don't be anxious that someone possesses things before you.", tags: ["節奏", "比較", "獨特"] },
+            { zh: "不是每場雨都要撐傘，有些眼淚會讓花長出來。", en: "Not every rain requires an umbrella; some tears help flowers grow.", tags: ["悲傷", "成長", "眼淚"] },
+            { zh: "如果你覺得身處地獄，那還不快繼續往前走。", en: "If you think you are in hell, why don't you keep going?", tags: ["困境", "前進", "幽默"] },
+            { zh: "心裡有選擇的話，堅定好了。", en: "If you have a choice in your heart, stand firm.", tags: ["選擇", "堅定", "信念"] },
+            { zh: "過程很累很苦，但夢想很清楚。", en: "The process is tiring and bitter, but the dream is clear.", tags: ["夢想", "過程", "清晰"] },
+            { zh: "努力過後，不是成功就是成長。", en: "After effort, it's either success or growth.", tags: ["成長", "成功", "結果"] },
+            { zh: "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。", en: "Life never has the right choice, only the process of making your choice the right answer.", tags: ["人生", "選擇", "哲理"] },
+            { zh: "當你夠強，是刀都往肩上扛。", en: "When you are strong enough, you carry every knife on your shoulder.", tags: ["強大", "責任", "承擔"] },
+            { zh: "不要想著完美，而是好好過生活、過現在。", en: "Don't aim for perfection, but live life well, live in the present.", tags: ["生活", "現在", "不完美"] },
+            { zh: "你撐過的每一個黑夜，都值得一點掌聲。", en: "Every dark night you endure deserves a round of applause.", tags: ["黑夜", "掌聲", "自我肯定"] },
+            { zh: "我們都有各自的滾燙和冰霜。", en: "We all have our own heat and frost.", tags: ["自我", "獨特", "複雜"] }
         ];
 
         const quoteText = document.getElementById('quote-text');
+        const quoteTagsDiv = document.getElementById('quote-tags'); // 新增：標籤區塊
         const generateButton = document.getElementById('generate-button');
+        const softColors = ['#5C3A55', '#A0527F', '#8B457A', '#333']; 
+        let lastIndex = -1; // 追蹤上一個句子的索引
 
         // 隨機生成句子的函式
         function generateRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            const randomQuote = quotes[randomIndex];
+            let newIndex;
             
-            // 將句子中 **...** 包裹的部分轉換為 <strong>...</strong> 標籤
-            quoteText.innerHTML = randomQuote.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // 避免重複選擇同一個句子
+            do {
+                newIndex = Math.floor(Math.random() * quotes.length);
+            } while (newIndex === lastIndex && quotes.length > 1); // 確保句子數大於1時才進行檢查
+
+            lastIndex = newIndex; // 更新上一個句子的索引
+
+            const randomQuoteObj = quotes[newIndex];
+            
+            // 隨機選取文字顏色
+            const randomColorIndex = Math.floor(Math.random() * softColors.length);
+            quoteText.style.color = softColors[randomColorIndex];
+            
+            // 重設動畫 (讓動畫每次都執行)
+            quoteText.style.animation = 'none';
+            quoteText.offsetHeight; 
+            quoteText.style.animation = 'fadeIn 0.8s ease-out';
+
+            // 1. 顯示句子 (中英合併，並將英文部分用 <strong> 包裹)
+            const fullText = randomQuoteObj.zh + `**${randomQuoteObj.en}**`;
+            quoteText.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // 2. 顯示標籤
+            const tagsHTML = randomQuoteObj.tags.map(tag => `<span class="tag">#${tag}</span>`).join('');
+            quoteTagsDiv.innerHTML = tagsHTML;
         }
 
         // 監聽按鈕的點擊事件
