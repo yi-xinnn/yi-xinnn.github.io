@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>隨機句子產生器 - 分類標籤修正版</title>
-    <link rel="icon" href="擷取.PNG">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
@@ -112,7 +111,7 @@
             font-weight: 500;
         }
 
-        /* 篩選按鈕區塊滾動條設置 - 保持不變 */
+        /* 篩選按鈕區塊滾動條設置 */
         #tag-buttons {
             max-height: 120px; 
             overflow-y: auto; 
@@ -220,7 +219,7 @@
     </footer>
 
     <script>
-        // *** 句子庫：包含 7 個主分類標籤 ***
+        // *** 句子庫：已移除 #視野 標籤，並維持 7 個主分類標籤邏輯 ***
         const quotes = [
             // 第一組原創句子 (已使用新的主分類標籤)
             { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "夢想"] },
@@ -258,7 +257,7 @@
             { zh: "你撐過的每一個黑夜，都值得一點掌聲。", en: "Every dark night you endure deserves a round of applause.", tags: ["堅持", "信念"] },
             { zh: "我們都有各自的滾燙和冰霜。", en: "We all have our own heat and frost.", tags: ["哲理", "獨特"] },
 
-            // 第二組名言與格言 (已使用新的主分類標籤)
+            // 第二組名言與格言 (已修正 #視野 標籤)
             { zh: "人生就像騎單車，要保持平衡，就必須一直向前。", en: "Life is like riding a bicycle. To keep your balance, you must keep moving.", tags: ["堅持", "哲理"] },
             { zh: "二十年後，你會因為沒做的事而比做過的事更後悔。", en: "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do.", tags: ["行動", "後悔"] },
             { zh: "我不能改變風向，但我能調整帆的方向。", en: "I can't change the direction of the wind, but I can adjust my sails to always reach my destination.", tags: ["成長", "適應"] },
@@ -290,7 +289,7 @@
             { zh: "成功的速度需要跑得比別人快。", en: "The speed of success needs to be faster than others.", tags: ["成功", "競爭"] },
             { zh: "生命太短，沒時間留給遺憾。", en: "Life is too short to leave room for regret.", tags: ["行動", "哲理"] },
             { zh: "只有你自己能決定自己的命運。", en: "Only you can decide your own destiny.", tags: ["信念", "自主"] },
-            { zh: "站在巨人的肩膀上才能看得更遠。", en: "Only by standing on the shoulders of giants can you see farther.", tags: ["成長", "視野"] },
+            { zh: "站在巨人的肩膀上才能看得更遠。", en: "Only by standing on the shoulders of giants can you see farther.", tags: ["成長", "哲理"] }, // 已修正
             { zh: "每天都是新的挑戰，勇敢面對。", en: "Every day is a new challenge, face it bravely.", tags: ["行動", "挑戰"] },
             { zh: "不要害怕改變，改變是成功的第一步。", en: "Don't be afraid of change; change is the first step to success.", tags: ["成長", "行動"] },
             { zh: "追求卓越，成功自然會追隨你。", en: "Pursue excellence, and success will naturally follow you.", tags: ["成功", "卓越"] },
@@ -314,7 +313,7 @@
             { zh: "善用你的優勢。多做你擅長的事情而不是那些你不擅長的事。", en: "Play to your strengths. If you aren’t great at something, do more of what you’re great at.", tags: ["成功", "優勢"] },
             { zh: "大家只會想著改變世界，卻從沒想過先改變自己。", en: "Everyone thinks of changing the world, but no one thinks of changing himself.", tags: ["成長", "哲理"] },
             { zh: "從失敗中建造自己。將失敗作為墊腳石。過去的就讓它過去，不需要試圖忘記錯誤，而是不必糾結於它。", en: "You build on failure. You use it as a stepping stone. Close the door on the past. You don't try to forget the mistakes, but you don't dwell on it.", tags: ["成長", "放下"] },
-            { zh: "時代和環境變化非常快速，因此我們必須持續將目光聚焦在未來。", en: "Times and conditions change so rapidly that we must keep our aim constantly focused on the future.", tags: ["成長", "視野"] },
+            { zh: "時代和環境變化非常快速，因此我們必須持續將目光聚焦在未來。", en: "Times and conditions change so rapidly that we must keep our aim constantly focused on the future.", tags: ["成長", "希望"] }, // 已修正
             { zh: "一位孩童、一位老師、一支筆、一本書將可以改變世界。", en: "One child, one teacher, one pen, and one book can change the world.", tags: ["希望", "力量"] },
             { zh: "有史以來最偉大的發現是，一個人可以通過改變他的態度來改變他的未來。", en: "The greatest discovery of all time is that a person can change his future by merely changing his attitude.", tags: ["成長", "信念"] },
             { zh: "每一位偉大的夢想都來自於勇敢做夢的人。", en: "Every great dream begins with a dreamer. Always remember, you have within you the strength, the patience, and the passion to reach for the stars to change the world.", tags: ["希望", "夢想"] },
@@ -513,7 +512,5 @@
 
         generateButton.addEventListener('click', generateRandomQuote);
     </script>
-</body>
-</html>
 </body>
 </html>
