@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>隨機句子產生器 - 分類標籤優化</title>
+    <title>隨機句子產生器 - 分類標籤修正版</title>
+    <link rel="icon" href="擷取.PNG">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
     <style>
+        /* 定義淡入動畫 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         body {
+            /* 背景和星空 */
             background: #E8CEE0; 
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><rect width="100" height="100" fill="#E8CEE0"/><circle cx="10" cy="10" r="0.2" fill="#AF93A8"/><circle cx="90" cy="50" r="0.3" fill="#D3B8CC"/><circle cx="50" cy="90" r="0.4" fill="#AF93A8"/><circle cx="25" cy="70" r="0.15" fill="#D3B8CC"/><circle cx="75" cy="30" r="0.25" fill="#AF93A8"/><circle cx="40" cy="20" r="0.1" fill="#D3B8CC"/><circle cx="80" cy="80" r="0.35" fill="#AF93A8"/></svg>'); 
             background-size: cover; 
             background-attachment: fixed; 
+            
             color: #333; 
             font-family: 'Noto Serif TC', serif; 
             display: flex;
@@ -108,7 +112,7 @@
             font-weight: 500;
         }
 
-        /* 篩選按鈕區塊滾動條設置 */
+        /* 篩選按鈕區塊滾動條設置 - 保持不變 */
         #tag-buttons {
             max-height: 120px; 
             overflow-y: auto; 
@@ -216,61 +220,62 @@
     </footer>
 
     <script>
-        // *** 這是程式碼關鍵區塊：句子庫定義 (請將第 2 部分的完整句子庫貼到這裡) ***
+        // *** 句子庫：包含 7 個主分類標籤 ***
         const quotes = [
+            // 第一組原創句子 (已使用新的主分類標籤)
             { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "夢想"] },
             { zh: "心態決定狀態。", en: "Attitude determines altitude.", tags: ["信念", "哲理"] },
-            { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["責任", "成長"] },
+            { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["成長", "責任"] },
             { zh: "累的時候，想想當初為什麼開始。", en: "When you're tired, remember why you started.", tags: ["堅持", "初衷"] },
             { zh: "發過光的人，請你不要黯淡。", en: "Those who have shined, please do not fade.", tags: ["希望", "信念"] },
             { zh: "墮落和努力一樣都會上癮。", en: "Falling and striving are both addictive.", tags: ["哲理", "成長"] },
-            { zh: "那些不能殺死我的，都將使我更堅強。", en: "What doesn't kill me makes me stronger.", tags: ["堅強", "成長"] },
+            { zh: "那些不能殺死我的，都將使我更堅強。", en: "What doesn't kill me makes me stronger.", tags: ["成長", "堅強"] },
             { zh: "成長從來不是來自物質堆砌，而是來自你心底那份，對自己披荊斬棘的溫柔守護。", en: "Growth never comes from material accumulation, but from the gentle protection in your heart to blaze your own trail.", tags: ["成長", "哲理"] },
-            { zh: "日子嘛，縫縫補補還能過。", en: "Life is like that, patching it up, it can still go on.", tags: ["生活", "希望"] },
-            { zh: "這個世界，有個很棒的人，他正在讀這句話。", en: "There is a wonderful person in this world, and they are reading this sentence.", tags: ["溫暖", "信念"] },
+            { zh: "日子嘛，縫縫補補還能過。", en: "Life is like that, patching it up, it can still go on.", tags: ["希望", "生活"] },
+            { zh: "這個世界，有個很棒的人，他正在讀這句話。", en: "There is a wonderful person in this world, and they are reading this sentence.", tags: ["希望", "信念"] },
             { zh: "親愛的，沒關係，混亂也是成長的一部份。", en: "Dear, it's okay, chaos is also a part of growth.", tags: ["成長", "希望"] },
-            { zh: "變好的過程，通常都不會太舒服。", en: "The process of getting better is usually uncomfortable.", tags: ["成長", "挑戰"] },
+            { zh: "變好的過程，通常都不會太舒服。", en: "The process of getting better is usually uncomfortable.", tags: ["成長", "堅持"] },
             { zh: "別忘記走上這一條路的初衷是甚麼，不能在遙途中迷失自己的方向。", en: "Don't forget the initial reason for walking this path, and don't lose your direction on the long journey.", tags: ["堅持", "目標"] },
-            { zh: "失落並不丟臉，它代表你還在乎。", en: "Being lost is not shameful; it means you still care.", tags: ["情緒", "哲理"] },
+            { zh: "失落並不丟臉，它代表你還在乎。", en: "Being lost is not shameful; it means you still care.", tags: ["哲理", "情緒"] },
             { zh: "生活是一千次崩潰，一千零一次挺住。", en: "Life is a thousand breakdowns and a thousand and one times standing firm.", tags: ["堅持", "生活"] },
             { zh: "不要眼眶一紅，就覺得人間不值得。", en: "Don't feel the world is unworthy just because your eyes turn red.", tags: ["信念", "哲理"] },
-            { zh: "允許自己是那朵晚開的花。", en: "Allow yourself to be the late blooming flower.", tags: ["時間", "哲理"] },
-            { zh: "撐過就是你的。", en: "Endure it, and it will be yours.", tags: ["堅持", "收穫"] },
-            { zh: "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。", en: "The truly brave person is one who who continues to run, even with tears in their eyes.", tags: ["堅持", "勇敢"] },
-            { zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。", en: "If there really is a miracle in this world, it is just another name for effort.", tags: ["成功", "努力"] },
+            { zh: "允許自己是那朵晚開的花。", en: "Allow yourself to be the late blooming flower.", tags: ["哲理", "時間"] },
+            { zh: "撐過就是你的。", en: "Endure it, and it will be yours.", tags: ["堅持", "成功"] },
+            { zh: "真正勇敢的人，是那怕含著淚水也要繼續奔跑的人。", en: "The truly brave person is one who who continues to run, even with tears in their eyes.", tags: ["堅持", "行動"] },
+            { zh: "如果這世界上真的有奇蹟，那只是努力的另一個名字。", en: "If there really is a miracle in this world, it is just another name for effort.", tags: ["成功", "信念"] },
             { zh: "你可以假裝努力，但結果不會陪你演戲。", en: "You can pretend to work hard, but the result won't play along.", tags: ["行動", "誠實"] },
             { zh: "幸運來自你不為人知的努力。", en: "Luck comes from your unseen effort.", tags: ["成功", "努力"] },
             { zh: "行動交給現在，結果交由時間。", en: "Action belongs to the present, the outcome belongs to time.", tags: ["行動", "哲理"] },
-            { zh: "每個人的花期不同，不必焦慮有人比你提前擁有。", en: "Everyone has a different blooming period; don't be anxious that someone possesses things before you.", tags: ["哲理", "獨特"] },
+            { zh: "每個人的花期不同，不必焦慮有人比你提前擁有。", en: "Everyone has a different blooming period; don't be anxious that someone possesses things before you.", tags: ["哲理", "成長"] },
             { zh: "不是每場雨都要撐傘，有些眼淚會讓花長出來。", en: "Not every rain requires an umbrella; some tears help flowers grow.", tags: ["希望", "成長"] },
-            { zh: "如果你覺得身處地獄，那還不快繼續往前走。", en: "If you think you are in hell, why don't you keep going?", tags: ["行動", "前進"] },
+            { zh: "如果你覺得身處地獄，那還不快繼續往前走。", en: "If you think you are in hell, why don't you keep going?", tags: ["行動", "堅持"] },
             { zh: "心裡有選擇的話，堅定好了。", en: "If you have a choice in your heart, stand firm.", tags: ["信念", "選擇"] },
             { zh: "過程很累很苦，但夢想很清楚。", en: "The process is tiring and bitter, but the dream is clear.", tags: ["堅持", "夢想"] },
             { zh: "努力過後，不是成功就是成長。", en: "After effort, it's either success or growth.", tags: ["成功", "成長"] },
             { zh: "人生從來沒有對的選擇，只有將自己的選擇變成正確答案的過程。", en: "Life never has the right choice, only the process of making your choice the right answer.", tags: ["哲理", "選擇"] },
-            { zh: "當你夠強，是刀都往肩上扛。", en: "When you are strong enough, you carry every knife on your shoulder.", tags: ["強大", "成長"] },
+            { zh: "當你夠強，是刀都往肩上扛。", en: "When you are strong enough, you carry every knife on your shoulder.", tags: ["成長", "強大"] },
             { zh: "不要想著完美，而是好好過生活、過現在。", en: "Don't aim for perfection, but live life well, live in the present.", tags: ["生活", "哲理"] },
-            { zh: "你撐過的每一個黑夜，都值得一點掌聲。", en: "Every dark night you endure deserves a round of applause.", tags: ["堅持", "自我肯定"] },
+            { zh: "你撐過的每一個黑夜，都值得一點掌聲。", en: "Every dark night you endure deserves a round of applause.", tags: ["堅持", "信念"] },
             { zh: "我們都有各自的滾燙和冰霜。", en: "We all have our own heat and frost.", tags: ["哲理", "獨特"] },
 
-            // --- 名言與格言 (重新分類) ---
+            // 第二組名言與格言 (已使用新的主分類標籤)
             { zh: "人生就像騎單車，要保持平衡，就必須一直向前。", en: "Life is like riding a bicycle. To keep your balance, you must keep moving.", tags: ["堅持", "哲理"] },
             { zh: "二十年後，你會因為沒做的事而比做過的事更後悔。", en: "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do.", tags: ["行動", "後悔"] },
             { zh: "我不能改變風向，但我能調整帆的方向。", en: "I can't change the direction of the wind, but I can adjust my sails to always reach my destination.", tags: ["成長", "適應"] },
-            { zh: "天才是百分之一的靈感，加上百分之九十九的汗水。", en: "Genius is one percent inspiration, ninety-nine percent perspiration.", tags: ["成功", "努力"] },
+            { zh: "天才是百分之一的靈感，加上百分之九十九的汗水。", en: "Genius is one percent inspiration, ninety-nine percent perspiration.", tags: ["成功", "堅持"] },
             { zh: "無論你認為自己行還是不行，你都是對的。", en: "Whether you think you can, or you think you can't, you're right.", tags: ["信念", "自信"] },
             { zh: "成功就是從失敗到失敗，也依然不改熱情。", en: "Success is going from failure to failure without losing your enthusiasm.", tags: ["成功", "堅持"] },
             { zh: "第一步是你必須說：「我辦得到」。", en: "The first step is you have to say that you can.", tags: ["行動", "信念"] },
             { zh: "我們應該有毅力，尤其要有信心。", en: "You must have perseverance and, above all, confidence.", tags: ["堅持", "信念"] },
             { zh: "行動是成功的基礎，沒有行動，一切都是空談。", en: "Action is the foundational key to all success.", tags: ["行動", "成功"] },
             { zh: "接受自己的極限，我們才能超越自己！", en: "Only when we accept our limits can we go beyond them.", tags: ["成長", "超越"] },
-            { zh: "不懈的努力是成功的基石。", en: "Unremitting effort is the cornerstone of success.", tags: ["成功", "努力"] },
-            { zh: "成功的花，人們只驚羨她現時的明艷，然而當初她的芽兒，卻浸透了奮鬥的淚泉。", en: "People only marvel at the brilliance of the flower of success, yet its bud was soaked in the tears of struggle.", tags: ["奮鬥", "過程"] },
-            { zh: "你的態度決定了你的高度。", en: "Your attitude determines your altitude.", tags: ["信念", "積極"] },
+            { zh: "不懈的努力是成功的基石。", en: "Unremitting effort is the cornerstone of success.", tags: ["成功", "堅持"] },
+            { zh: "成功的花，人們只驚羨她現時的明艷，然而當初她的芽兒，卻浸透了奮鬥的淚泉。", en: "People only marvel at the brilliance of the flower of success, yet its bud was soaked in the tears of struggle.", tags: ["成功", "過程"] },
+            { zh: "你的態度決定了你的高度。", en: "Your attitude determines your altitude.", tags: ["信念", "成長"] },
             { zh: "勇敢面對困難，生活才會更加精彩。", en: "Bravely face difficulties, and life will be more wonderful.", tags: ["行動", "勇敢"] },
-            { zh: "成功並非偶然，而是不斷努力的結果。", en: "Success is not accidental, but the result of continuous effort.", tags: ["成功", "努力"] },
-            { zh: "成功從不眷顧等待的人。", en: "Success never favors those who wait.", tags: ["行動", "效率"] },
-            { zh: "不怕路長，只怕志短。", en: "Fear not the length of the road, but the shortness of the will.", tags: ["堅持", "志向"] },
+            { zh: "成功並非偶然，而是不斷努力的結果。", en: "Success is not accidental, but the result of continuous effort.", tags: ["成功", "堅持"] },
+            { zh: "成功從不眷顧等待的人。", en: "Success never favors those who wait.", tags: ["行動", "成功"] },
+            { zh: "不怕路長，只怕志短。", en: "Fear not the length of the road, but the shortness of the will.", tags: ["堅持", "目標"] },
             { zh: "每一次創傷都是一次成熟，每一次失去都是一次獲得。", en: "Every wound is a maturation, every loss is a gain.", tags: ["成長", "哲理"] },
             { zh: "做自己想做的事，去自己想去的地方。", en: "Do what you want to do, go where you want to go.", tags: ["行動", "自由"] },
             { zh: "每一個你不滿意的現在，都有一個你沒有努力的曾經。", en: "Every present you are dissatisfied with has a past where you did not put in the effort.", tags: ["反思", "行動"] },
@@ -283,39 +288,40 @@
             { zh: "每一個成功者都有一個開始。勇於開始，才能找到成功的路。", en: "Every successful person has a beginning. Dare to start to find the road to success.", tags: ["行動", "成功"] },
             { zh: "不經歷風雨，怎能見彩虹。", en: "How can you see the rainbow without experiencing wind and rain?", tags: ["堅持", "收穫"] },
             { zh: "成功的速度需要跑得比別人快。", en: "The speed of success needs to be faster than others.", tags: ["成功", "競爭"] },
-            { zh: "生命太短，沒時間留給遺憾。", en: "Life is too short to leave room for regret.", tags: ["行動", "當下"] },
+            { zh: "生命太短，沒時間留給遺憾。", en: "Life is too short to leave room for regret.", tags: ["行動", "哲理"] },
             { zh: "只有你自己能決定自己的命運。", en: "Only you can decide your own destiny.", tags: ["信念", "自主"] },
-            { zh: "站在巨人的肩膀上才能看得更遠。", en: "Only by standing on the shoulders of giants can you see farther.", tags: ["成長", "學習"] },
+            { zh: "站在巨人的肩膀上才能看得更遠。", en: "Only by standing on the shoulders of giants can you see farther.", tags: ["成長", "視野"] },
             { zh: "每天都是新的挑戰，勇敢面對。", en: "Every day is a new challenge, face it bravely.", tags: ["行動", "挑戰"] },
-            { zh: "不要害怕改變，改變是成功的第一步。", en: "Don't be afraid of change; change is the first step to success.", tags: ["成長", "改變"] },
+            { zh: "不要害怕改變，改變是成功的第一步。", en: "Don't be afraid of change; change is the first step to success.", tags: ["成長", "行動"] },
             { zh: "追求卓越，成功自然會追隨你。", en: "Pursue excellence, and success will naturally follow you.", tags: ["成功", "卓越"] },
-            { zh: "每一個努力的瞬間，都是在為成功鋪路。", en: "Every moment of effort is paving the way for success.", tags: ["成功", "過程"] },
+            { zh: "每一個努力的瞬間，都是在為成功鋪路。", en: "Every moment of effort is paving the way for success.", tags: ["成功", "堅持"] },
             { zh: "夢想總有它實現的道理。", en: "Dreams always have their reason for realization.", tags: ["夢想", "信念"] },
             { zh: "勇敢去追求你想要的生活。", en: "Be brave and pursue the life you want.", tags: ["行動", "生活"] },
-            { zh: "信念是我們實現夢想的力量源泉。", en: "Faith is the source of our strength to realize our dreams.", tags: ["信念", "力量"] },
+            { zh: "信念是我們實現夢想的力量源泉。", en: "Faith is the source of our strength to realize our dreams.", tags: ["信念", "夢想"] },
             { zh: "每一個今天都是你未來的希望。", en: "Every today is the hope of your future.", tags: ["希望", "未來"] },
             { zh: "我們都生活在陰溝裡，但仍有些人仰望星空。", en: "We are all in the gutter, but some of us are looking at the stars.", tags: ["希望", "哲理"] },
             { zh: "當一扇幸福之門關閉時，另一扇就會打開。", en: "When one door of happiness closes, another opens.", tags: ["希望", "轉機"] },
             { zh: "做你自己，其他角色都已有人在演。", en: "Be yourself; everyone else is already taken.", tags: ["哲理", "獨特"] },
             { zh: "世間最珍貴的不是”得不到”和”已失去”，而是現在能把握的幸福。", en: "The most precious in the world is not 'can't get' and 'lost', but the happiness that can be grasped now.", tags: ["哲理", "當下"] },
-            { zh: "積極的態度會帶來積極的結果，因為態度是具有感染力的。", en: "Positive attitude brings positive results because attitude is infectious.", tags: ["信念", "積極"] },
+            { zh: "積極的態度會帶來積極的結果，因為態度是具有感染力的。", en: "Positive attitude brings positive results because attitude is infectious.", tags: ["信念", "成長"] },
             { zh: "萬事萬物皆有裂痕。 光就是這樣照進來的。", en: "There is a crack in everything. That's how the light gets in.", tags: ["哲理", "希望"] },
             { zh: "生活就是當我們忙著做其他計劃時，所發生的事情。", en: "Life is what happens to us while we are busy making other plans.", tags: ["生活", "當下"] },
             { zh: "如果你不能飛，那就跑吧 ; 如果你不能跑，那就走吧 ; 如果你不能走路，那就爬行。無論怎麼做，都必須持續地前進。", en: "If you can’t fly, then run. If you can’t run, then walk. If you can’t walk, then crawl. But whatever you do, you have to keep moving forward.", tags: ["堅持", "行動"] },
             { zh: "改變無可避免，是否能從中成長則是你的選擇。", en: "Change is inevitable. Growth is optional.", tags: ["成長", "選擇"] },
             { zh: "每天鬧鈴都會重新啟動。因此你的勝敗並不重要。不要糾結過去發生的事，為所有可能的未來奮鬥。", en: "Every day the clock resets. Your wins don't matter. Your failures don't matter. Don't stress on what was, fight for what could be.", tags: ["希望", "未來"] },
             { zh: "不要畏懼放棄所擁有而捨棄追求卓越的機會。", en: "Don't be afraid to give up the good to go for the great.", tags: ["成功", "追求"] },
-            { zh: "每一天都有奇蹟發生，改變你對奇蹟的看法，你將會發現奇蹟無所不在。", en: "Miracles happen every day, change your perception of what a miracle is and you’ll see them all around you.", tags: ["信念", "態度"] },
+            { zh: "每一天都有奇蹟發生，改變你對奇蹟的看法，你將會發現奇蹟無所不在。", en: "Miracles happen every day, change your perception of what a miracle is and you’ll see them all around you.", tags: ["信念", "希望"] },
             { zh: "善用你的優勢。多做你擅長的事情而不是那些你不擅長的事。", en: "Play to your strengths. If you aren’t great at something, do more of what you’re great at.", tags: ["成功", "優勢"] },
-            { zh: "大家只會想著改變世界，卻從沒想過先改變自己。", en: "Everyone thinks of changing the world, but no one thinks of changing himself.", tags: ["成長", "自我"] },
+            { zh: "大家只會想著改變世界，卻從沒想過先改變自己。", en: "Everyone thinks of changing the world, but no one thinks of changing himself.", tags: ["成長", "哲理"] },
             { zh: "從失敗中建造自己。將失敗作為墊腳石。過去的就讓它過去，不需要試圖忘記錯誤，而是不必糾結於它。", en: "You build on failure. You use it as a stepping stone. Close the door on the past. You don't try to forget the mistakes, but you don't dwell on it.", tags: ["成長", "放下"] },
             { zh: "時代和環境變化非常快速，因此我們必須持續將目光聚焦在未來。", en: "Times and conditions change so rapidly that we must keep our aim constantly focused on the future.", tags: ["成長", "視野"] },
             { zh: "一位孩童、一位老師、一支筆、一本書將可以改變世界。", en: "One child, one teacher, one pen, and one book can change the world.", tags: ["希望", "力量"] },
             { zh: "有史以來最偉大的發現是，一個人可以通過改變他的態度來改變他的未來。", en: "The greatest discovery of all time is that a person can change his future by merely changing his attitude.", tags: ["成長", "信念"] },
-            { zh: "每一位偉大的夢想都來自於勇敢做夢的人。", en: "Every great dream begins with a dreamer. Always remember, you have within you the strength, the patience, and the passion to reach for the stars to change the world.", tags: ["夢想", "力量"] },
+            { zh: "每一位偉大的夢想都來自於勇敢做夢的人。", en: "Every great dream begins with a dreamer. Always remember, you have within you the strength, the patience, and the passion to reach for the stars to change the world.", tags: ["希望", "夢想"] },
             { zh: "事情會改變，朋友會離去。生命不會為了任何人而停歇。", en: "Things change. And friends leave. Life doesn’t stop for anybody.", tags: ["哲理", "無常"] },
             { zh: "事情不是足以改變世界才算重要。", en: "Things don’t have to change the world to be important.", tags: ["哲理", "價值"] }
         ];
+        // *** 句子庫結束 ***
 
 
         const quoteText = document.getElementById('quote-text');
@@ -330,9 +336,14 @@
         let quoteCount = 0; 
         
         // ----------------------------------------------------
-        // 1. 計數器相關函數 (與上次相同)
+        // 1. 定義主分類標籤 (手動定義，確保只有 7 個)
         // ----------------------------------------------------
+        const mainTags = ["行動", "堅持", "成長", "信念", "哲理", "希望", "成功"];
 
+
+        // ----------------------------------------------------
+        // 2. 計數器相關函數 (與上次相同)
+        // ----------------------------------------------------
         function getTodayDate() {
             return new Date().toISOString().slice(0, 10);
         }
@@ -364,14 +375,9 @@
         }
         
         // ----------------------------------------------------
-        // 2. 建立標籤篩選按鈕 (優化：只抓取 quotes 內定義的標籤)
+        // 3. 建立標籤篩選按鈕 (修正：只使用 mainTags)
         // ----------------------------------------------------
         function createTagButtons() {
-            // 取得所有不重複的標籤
-            const allTags = new Set();
-            quotes.forEach(q => q.tags.forEach(tag => allTags.add(tag)));
-            const sortedTags = Array.from(allTags).sort(); 
-            
             // 1. 加入 #隨機 按鈕
             const randomBtn = document.createElement('button');
             randomBtn.className = 'filter-button selected';
@@ -381,8 +387,8 @@
             tagButtonsContainer.appendChild(randomBtn);
             currentSelectedTags.add('#隨機'); 
             
-            // 2. 加入所有其他主分類標籤按鈕
-            sortedTags.forEach(tag => {
+            // 2. 加入所有主分類標籤按鈕 (只使用 mainTags 陣列)
+            mainTags.forEach(tag => {
                 const button = document.createElement('button');
                 button.className = 'filter-button';
                 button.textContent = `#${tag}`;
@@ -393,7 +399,7 @@
         }
 
         // ----------------------------------------------------
-        // 3. 處理標籤點擊事件 (與上次相同)
+        // 4. 處理標籤點擊事件 (與上次相同)
         // ----------------------------------------------------
         function handleTagClick(event) {
             const clickedTag = event.target.dataset.tag;
@@ -441,7 +447,7 @@
         }
 
         // ----------------------------------------------------
-        // 4. 核心生成邏輯 (與上次相同)
+        // 5. 核心生成邏輯 (與上次相同)
         // ----------------------------------------------------
         function generateRandomQuote() {
             let availableQuotes = [];
@@ -449,7 +455,9 @@
             if (currentSelectedTags.has('#隨機')) {
                 availableQuotes = quotes;
             } else {
+                // 篩選邏輯：只要句子的任一標籤符合選中的主分類，就選入
                 availableQuotes = quotes.filter(quote => {
+                    // quote.tags 必須包含 currentSelectedTags 中的任一標籤
                     return quote.tags.some(tag => currentSelectedTags.has(tag));
                 });
             }
@@ -481,9 +489,11 @@
             quoteText.offsetHeight; 
             quoteText.style.animation = 'fadeIn 0.8s ease-out';
 
+            // 顯示句子
             const fullText = randomQuoteObj.zh + (randomQuoteObj.en ? `**${randomQuoteObj.en}**` : '');
             quoteText.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
+            // 顯示句子本身的標籤 (使用句子中定義的所有標籤)
             const tagsHTML = randomQuoteObj.tags.map(tag => `<span class="tag-display">#${tag}</span>`).join('');
             quoteFooterDiv.innerHTML = tagsHTML;
             
@@ -493,15 +503,17 @@
 
 
         // ----------------------------------------------------
-        // 5. 網頁加載時初始化
+        // 6. 網頁加載時初始化
         // ----------------------------------------------------
         window.onload = function() {
             loadQuoteCount(); 
-            createTagButtons();
+            createTagButtons(); // 只創建 8 個按鈕
             generateRandomQuote(); 
         }
 
         generateButton.addEventListener('click', generateRandomQuote);
     </script>
+</body>
+</html>
 </body>
 </html>
