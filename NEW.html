@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>隨機句子產生器 - 最終版</title>
+    <title>隨機句子產生器 - 計數器與滾動條</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barrels+Bold&display=swap"> 
     
@@ -25,7 +25,7 @@
             font-family: 'Noto Serif TC', serif; 
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* 調整對齊，讓內容集中在上方 */
+            justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
             margin: 0;
@@ -37,12 +37,23 @@
             /* 標題樣式 - 漸層色 */
             font-family: 'Noto Serif TC', serif;
             font-weight: 700; 
-            margin: 20px 0 30px 0;
+            margin: 20px 0 10px 0; /* 縮小與計數器間距 */
             font-size: 2.8em;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             background: linear-gradient(45deg, #FF69B4, #8B457A, #FFD700); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
+        }
+
+        /* 新增：計數器樣式 */
+        #count-display {
+            font-size: 1.1em;
+            color: #8B457A;
+            margin-bottom: 30px;
+            padding: 5px 15px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
         }
 
         #quote-box {
@@ -93,7 +104,7 @@
             width: 90%;
             margin-bottom: 20px;
             padding: 15px;
-            background-color: rgba(255, 255, 255, 0.5); /* 半透明背景 */
+            background-color: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
@@ -106,6 +117,15 @@
             font-weight: 500;
         }
 
+        /* **關鍵修改：限制高度並加入滾動條** */
+        #tag-buttons {
+            max-height: 120px; /* 限制高度約為兩到三排按鈕的高度 */
+            overflow-y: auto; /* 垂直滾動 */
+            padding-right: 5px; /* 避免滾動條擋住文字 */
+        }
+        /* -------------------------------------- */
+
+
         .filter-button {
             background-color: #F5E8EE; 
             color: #8B457A; 
@@ -117,6 +137,8 @@
             transition: all 0.3s;
             font-family: 'Noto Serif TC', sans-serif;
             font-size: 0.9em;
+            /* 讓按鈕可以換行 */
+            display: inline-block; 
         }
         
         .filter-button:hover {
@@ -126,7 +148,7 @@
 
         /* 標籤被選中時的樣式 */
         .filter-button.selected {
-            background-color: #A0527F; /* 選中時的深玫瑰色 */
+            background-color: #A0527F; 
             color: #FFF;
             border-color: #8B457A;
             box-shadow: 0 0 5px rgba(160, 82, 127, 0.5);
@@ -137,7 +159,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px; /* 按鈕和篩選區的間距 */
+            gap: 20px; 
             width: 90%;
             max-width: 800px;
             margin-top: 20px;
@@ -157,7 +179,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 0 10px #FFD700, 0 0 20px #E3A3C9, 0 0 30px #A0527F;
             z-index: 10; 
-            flex-shrink: 0; /* 防止按鈕被擠壓 */
+            flex-shrink: 0; 
         }
 
         #generate-button:hover {
@@ -185,6 +207,7 @@
 
     <header>
         <h1>🌸 隨機句子產生器 🕯️</h1>
+        <div id="count-display">您今天已獲得 <span id="quote-count">0</span> 句力量 💪</div>
     </header>
 
     <main>
@@ -207,7 +230,7 @@
             </button>
         </div>
     </footer>
-
+    
     <script>
         // 包含句子、英文和標籤的物件陣列 (已整合所有句子)
         const quotes = [
@@ -313,22 +336,62 @@
             
         ];
 
-        const quoteText = document.getElementById('quote-text');
+       const quoteText = document.getElementById('quote-text');
         const quoteFooterDiv = document.getElementById('quote-footer');
         const generateButton = document.getElementById('generate-button');
         const tagButtonsContainer = document.getElementById('tag-buttons');
+        const quoteCountDisplay = document.getElementById('quote-count'); // 新增：計數器顯示元素
 
         const softColors = ['#5C3A55', '#A0527F', '#8B457A', '#333']; 
         let currentSelectedTags = new Set(); 
         let lastQuote = null; 
+        let quoteCount = 0; // 當日句子計數
         
         // 取得所有不重複的標籤
         const allTags = new Set();
         quotes.forEach(q => q.tags.forEach(tag => allTags.add(tag)));
         const sortedTags = Array.from(allTags).sort(); 
-        
+
         // ----------------------------------------------------
-        // 1. 建立標籤篩選按鈕
+        // 1. 計數器相關函數
+        // ----------------------------------------------------
+
+        // 取得今天的日期字串 (YYYY-MM-DD)
+        function getTodayDate() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        // 從 LocalStorage 加載計數
+        function loadQuoteCount() {
+            const today = getTodayDate();
+            const storedData = localStorage.getItem('quoteGeneratorData');
+            
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                if (data.date === today) {
+                    quoteCount = data.count;
+                } else {
+                    // 如果日期不一致，表示今天是新的一天，計數歸零
+                    quoteCount = 0;
+                    saveQuoteCount();
+                }
+            }
+            quoteCountDisplay.textContent = quoteCount;
+        }
+
+        // 保存計數到 LocalStorage
+        function saveQuoteCount() {
+            const today = getTodayDate();
+            const data = {
+                date: today,
+                count: quoteCount
+            };
+            localStorage.setItem('quoteGeneratorData', JSON.stringify(data));
+            quoteCountDisplay.textContent = quoteCount;
+        }
+
+        // ----------------------------------------------------
+        // 2. 建立標籤篩選按鈕 (與上次相同)
         // ----------------------------------------------------
         function createTagButtons() {
             // 加入 #隨機 按鈕
@@ -338,7 +401,7 @@
             randomBtn.dataset.tag = '#隨機';
             randomBtn.addEventListener('click', handleTagClick);
             tagButtonsContainer.appendChild(randomBtn);
-            currentSelectedTags.add('#隨機'); // 預設選中隨機
+            currentSelectedTags.add('#隨機'); 
             
             // 加入所有其他標籤按鈕
             sortedTags.forEach(tag => {
@@ -352,7 +415,7 @@
         }
 
         // ----------------------------------------------------
-        // 2. 處理標籤點擊事件
+        // 3. 處理標籤點擊事件 (與上次相同)
         // ----------------------------------------------------
         function handleTagClick(event) {
             const clickedTag = event.target.dataset.tag;
@@ -361,9 +424,7 @@
             const randomBtn = document.querySelector('[data-tag="#隨機"]');
             
             if (clickedTag === '#隨機') {
-                // 如果點擊 #隨機
                 if (!isSelected) {
-                    // 選中 #隨機，清除所有其他標籤
                     currentSelectedTags.clear();
                     currentSelectedTags.add('#隨機');
                     document.querySelectorAll('.filter-button').forEach(btn => {
@@ -374,58 +435,47 @@
                     return; 
                 }
             } else {
-                // 如果點擊一般標籤
                 if (isSelected) {
-                    // 取消選取
                     event.target.classList.remove('selected');
                     currentSelectedTags.delete(clickedTag);
                 } else {
-                    // 選取
                     if (currentSelectedTags.has('#隨機') || currentSelectedTags.size < maxSelection) {
-                        // 如果 #隨機 已選中，則先取消 #隨機
                         if (currentSelectedTags.has('#隨機')) {
                             currentSelectedTags.delete('#隨機');
                             randomBtn.classList.remove('selected');
                         }
                         
-                        // 選取新標籤
                         event.target.classList.add('selected');
                         currentSelectedTags.add(clickedTag);
                     } else {
-                        // 超過最大數量
                         alert(`最多只能選擇 ${maxSelection} 個標籤！`);
                         return;
                     }
                 }
                 
-                // 檢查如果沒有任何標籤被選中，則自動選中 #隨機
                 if (currentSelectedTags.size === 0) {
                     currentSelectedTags.add('#隨機');
                     randomBtn.classList.add('selected');
                 }
             }
             
-            // 點擊標籤後立即產生一個句子
             generateRandomQuote();
         }
 
         // ----------------------------------------------------
-        // 3. 核心生成邏輯 (包含篩選和不重複)
+        // 4. 核心生成邏輯 (更新：增加計數)
         // ----------------------------------------------------
         function generateRandomQuote() {
             let availableQuotes = [];
 
             if (currentSelectedTags.has('#隨機')) {
-                // 如果選中 #隨機，則使用全部句子
                 availableQuotes = quotes;
             } else {
-                // 根據選中的標籤篩選句子 (任一標籤符合即可)
                 availableQuotes = quotes.filter(quote => {
                     return quote.tags.some(tag => currentSelectedTags.has(tag));
                 });
             }
 
-            // 處理沒有句子的情況
             if (availableQuotes.length === 0) {
                 quoteText.innerHTML = "找不到符合所選標籤的句子，請更改選擇。";
                 quoteFooterDiv.innerHTML = "";
@@ -438,14 +488,13 @@
             let attempts = 0;
             const maxAttempts = 10; 
             
-            // 避免重複選擇同一個句子
             do {
                 newIndex = Math.floor(Math.random() * availableQuotes.length);
                 randomQuoteObj = availableQuotes[newIndex];
                 attempts++;
             } while (randomQuoteObj === lastQuote && availableQuotes.length > 1 && attempts < maxAttempts);
 
-            lastQuote = randomQuoteObj; // 更新上一個句子物件
+            lastQuote = randomQuoteObj; 
 
             // 隨機選取文字顏色
             const randomColorIndex = Math.floor(Math.random() * softColors.length);
@@ -456,22 +505,26 @@
             quoteText.offsetHeight; 
             quoteText.style.animation = 'fadeIn 0.8s ease-out';
 
-            // 1. 顯示句子 (中英合併)
-            const fullText = randomQuoteObj.zh + `**${randomQuoteObj.en}**`;
+            // 1. 顯示句子 
+            const fullText = randomQuoteObj.zh + (randomQuoteObj.en ? `**${randomQuoteObj.en}**` : ''); // 判斷英文是否為空
             quoteText.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
             // 2. 顯示標籤
             const tagsHTML = randomQuoteObj.tags.map(tag => `<span class="tag-display">#${tag}</span>`).join('');
             quoteFooterDiv.innerHTML = tagsHTML;
+            
+            // **新增：計數器更新**
+            quoteCount++;
+            saveQuoteCount();
         }
 
 
         // ----------------------------------------------------
-        // 4. 網頁加載時初始化
+        // 5. 網頁加載時初始化
         // ----------------------------------------------------
         window.onload = function() {
+            loadQuoteCount(); // 加載歷史計數
             createTagButtons();
-            // 首次加載時，預設選中 #隨機 並產生一個句子
             generateRandomQuote(); 
         }
 
