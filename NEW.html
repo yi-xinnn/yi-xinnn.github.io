@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -8,7 +7,6 @@
     <link rel="icon" href="擷取.PNG">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap">
     <style>
-        /* --- 基礎樣式與背景 --- */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -27,102 +25,89 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            text-align: center;
             padding: 20px;
         }
 
-        /* --- 標題與計數器 --- */
         h1 {
+            font-family: 'Noto Serif TC', serif;
             font-weight: 700; 
             margin: 20px 0 10px 0;
             font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             background: linear-gradient(45deg, #FF69B4, #8B457A, #FFD700); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
-            text-align: center;
         }
 
         #count-display {
             font-size: 1.1em;
             color: #8B457A;
             margin-bottom: 30px;
-            padding: 8px 20px;
+            padding: 5px 15px;
             background-color: rgba(255, 255, 255, 0.6);
-            border-radius: 50px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- 句子顯示區 --- */
         #quote-box {
             max-width: 800px;
             width: 90%;
-            background-color: rgba(255, 255, 255, 0.85); 
-            padding: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
-            min-height: 220px;
+            background-color: rgba(255, 255, 255, 0.8); 
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); 
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 40px;
-            transition: all 0.3s ease;
+            margin-bottom: 30px;
         }
 
         #quote-text {
-            font-size: 1.9em;
+            font-size: 1.8em;
             line-height: 1.6;
-            margin: 0;
-            color: #444;
-            font-weight: 500;
-        }
-
-        #quote-text strong {
-            display: block;
-            font-size: 0.75em;
-            color: #777;
-            margin-top: 20px;
-            font-weight: normal;
-            font-style: italic;
+            margin: 0 0 10px 0; 
+            color: #333; 
         }
 
         #quote-footer {
-            margin-top: 25px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            margin-top: 15px;
+            min-height: 20px; 
         }
 
         .tag-display {
+            display: inline-block;
             background-color: #F5E8EE; 
             border-radius: 5px;
-            padding: 4px 10px;
-            margin: 3px;
+            padding: 3px 8px;
+            margin: 0 5px 5px 0;
             color: #8B457A; 
-            font-size: 0.85em;
-        }
-
-        /* --- 控制面板與篩選 --- */
-        #controls-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px; 
-            width: 95%;
-            max-width: 950px;
+            font-size: 0.9em;
+            font-weight: 500;
         }
 
         #filter-container {
+            max-width: 900px;
+            width: 90%;
+            margin-bottom: 20px;
+            padding: 15px;
             background-color: rgba(255, 255, 255, 0.5);
-            padding: 20px;
-            border-radius: 15px;
-            flex-grow: 1;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .tag-hint {
-            font-size: 0.85em;
-            color: #8B457A;
-            margin-bottom: 12px;
-            font-weight: bold;
+        #filter-container h2 {
+            font-size: 1.1em;
+            margin: 0 0 10px 0;
+            color: #5C3A55;
+        }
+
+        #tag-buttons {
+            max-height: 150px; 
+            overflow-y: auto; 
+            padding-right: 5px; 
         }
 
         .filter-button {
@@ -130,11 +115,17 @@
             color: #8B457A; 
             border: 1px solid #D3B8CC;
             border-radius: 20px;
-            padding: 6px 14px;
+            padding: 5px 12px;
             margin: 5px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            font-family: 'Noto Serif TC', sans-serif;
             font-size: 0.9em;
+        }
+        
+        .filter-button:hover {
+            background-color: #E3A3C9;
+            color: #FFF;
         }
 
         .filter-button.selected {
@@ -142,8 +133,17 @@
             color: #FFF;
             border-color: #8B457A;
         }
+        
+        #controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; 
+            width: 90%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
 
-        /* --- 圓形按鈕 --- */
         #generate-button {
             width: 100px;
             height: 100px;
@@ -154,20 +154,21 @@
             font-size: 1.5em;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(160, 82, 127, 0.4);
-            flex-shrink: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #FFD700, 0 0 20px #E3A3C9, 0 0 30px #A0527F;
+            flex-shrink: 0; 
         }
 
         #generate-button:hover {
-            transform: scale(1.1);
-            background-color: #8B457A;
-            box-shadow: 0 0 20px #E3A3C9;
+            background-color: #8B457A; 
+            transform: scale(1.1); 
         }
 
-        @media (max-width: 768px) {
-            #controls-wrapper { flex-direction: column; }
-            #generate-button { width: 80px; height: 80px; font-size: 1.2em; }
+        strong {
+            display: block; 
+            margin-top: 10px;
+            font-size: 0.8em; 
+            font-weight: normal;
         }
     </style>
 </head>
@@ -175,59 +176,65 @@
 
     <header>
         <h1>🌸 隨機句子產生器 🕯️</h1>
-        <div id="count-display">今日啟發數：<span id="quote-count">0</span> 句</div>
+        <div id="count-display">您今天已獲得 <span id="quote-count">0</span> 句力量 💪</div>
     </header>
 
-    <main id="quote-box">
-        <p id="quote-text"></p>
-        <div id="quote-footer"></div> 
+    <main>
+        <div id="quote-box">
+            <p id="quote-text"></p>
+            <div id="quote-footer"></div>
+        </div>
     </main>
 
-    <div id="controls-wrapper">
-        <div id="filter-container">
-            <div class="tag-hint">💡 選擇 1~3 項標籤（多選為聯集顯示）：</div>
-            <div id="tag-buttons"></div>
+    <footer>
+        <div id="controls-wrapper">
+            <div id="filter-container">
+                <h2>選擇句子類型 (可多選 1~3 項)：</h2>
+                <div id="tag-buttons"></div>
+            </div>
+            <button id="generate-button"><span>GO!</span></button>
         </div>
-        <button id="generate-button">GO!</button>
-    </div>
+    </footer>
 
     <script>
-        // --- 完整資料庫 (80+ 句) ---
         const quotes = [
-            // 土味情話
-            { zh: "妳知道妳跟星星有什麼差別嗎？星星在天上，妳在我心上。", en: "The stars are in the sky, but you are in my heart.", tags: ["土味情話", "信念"] },
-            { zh: "剪刀石頭布，我只出剪刀，因為你是我的拳布（全部）。", en: "Rock-paper-scissors, I only play scissors, because you are my 'everything'.", tags: ["土味情話", "成功"] },
-            { zh: "昨晚沒睡好，因為被子太輕，壓不住我想你的心。", en: "The blanket was too light to hold down my longing for you.", tags: ["土味情話", "哲理"] },
-            { zh: "我想換一個髮型：沒有你不行。", en: "I want to change my hairstyle: to one where I can't live without you.", tags: ["土味情話", "行動"] },
-            { zh: "你是我的奶茶，什麼配料都百搭，永遠喝不膩。", en: "You are my milk tea; you go well with any topping.", tags: ["土味情話", "希望"] },
-            { zh: "一人做事一人當，你的寶寶我來當。", en: "I'll take responsibility for being your baby.", tags: ["土味情話", "成功"] },
-            { zh: "今天迷路了，你知道是什麼路嗎？愛你沒有退路。", en: "I got lost today. The road of loving you with no way back.", tags: ["土味情話", "行動"] },
-            { zh: "我犯了錯。愛你我不知所措。", en: "I made a mistake. Being at a loss because I love you.", tags: ["土味情話", "哲理"] },
-            { zh: "我就說怎麼手上突然多了雙筷子，原來是看到我的菜了。", en: "Why do I have chopsticks? Because I saw 'my dish'.", tags: ["土味情話", "成功"] },
-            { zh: "我今天放了個很響的屁，但是沒有想你那麼想。", en: "I let out a loud fart, but it wasn't as 'loud' as how I miss you.", tags: ["土味情話", "廢話文學"] },
-            { zh: "你是不是把藍牙打開了？我們好像配對上了。", en: "Did you turn on Bluetooth? Because we’ve paired up.", tags: ["土味情話", "成功"] },
-            { zh: "想說些漂亮的話哄妳，但想來想去，最漂亮的只有妳。", en: "The only thing pretty is you.", tags: ["土味情話", "希望"] },
-            { zh: "這是筷子，這是筷架。筷子給你，快嫁給我。", en: "Here's a chopstick and a rest. Now marry me.", tags: ["土味情話", "行動"] },
-            { zh: "查了今天的農民曆，除了愛你諸事不宜。", en: "The almanac says nothing is appropriate today except loving you.", tags: ["土味情話", "信念"] },
-            { zh: "如果你是 3 我就是 9，因為我除了你還是你。", en: "If you are 3, I am 9. Because I am nothing but you.", tags: ["土味情話", "哲理"] },
-            { zh: "剛剛有沒有感覺到地震？那是我看到妳時心動了一下。", en: "Did you feel an earthquake? That was my heart skipping a beat.", tags: ["土味情話", "希望"] },
-            { zh: "你們洗澡都先洗哪裡？我通常是先喜歡你。", en: "I usually start shower by 'liking you'.", tags: ["土味情話", "行動"] },
-
-            // 廢話文學
-            { zh: "當你覺得自己不行的時候，請走到斑馬線上，那麼你就會變成一個行人。", en: "Step onto a crosswalk to become a pedestrian.", tags: ["廢話文學", "哲理"] },
-            { zh: "人紅是非多，活益比菲多。", en: "Fame brings drama; Bifido brings yogurt.", tags: ["廢話文學"] },
-            { zh: "大學玩四年，人生苦四十年；大學苦四年，人生苦四十四年。", en: "Study for 4 years, suffer for 44.", tags: ["廢話文學", "哲理"] },
-            { zh: "不聽老人言，快樂一整年。", en: "Ignore elders' advice, and stay happy all year.", tags: ["廢話文學", "信念"] },
-            { zh: "無心插柳 柳橙汁。", en: "Plant a willow by chance... Orange Juice.", tags: ["廢話文學"] },
-            { zh: "我心繫於你，你卻新細明體。", en: "My heart is tied to you, but yours is just Times New Roman.", tags: ["廢話文學"] },
-            { zh: "思念是一種病，思樂是一種冰。", en: "Longing is a disease; Slurpee is a freeze.", tags: ["廢話文學"] },
-            { zh: "書到用時方恨少，錢到月底方恨少。", en: "Regret little knowledge when using it; regret little money at month end.", tags: ["廢話文學", "成功"] },
-            { zh: "有些事情現在想不通，別著急，過一段時間你就想不起來了。", en: "If you can't figure it out, soon you won't remember it.", tags: ["廢話文學", "希望"] },
-            { zh: "愛笑的女孩運氣都不會太差，因為運氣差的根本笑不出來。", en: "Lucky girls laugh; unlucky ones can't.", tags: ["廢話文學", "希望"] },
+            // --- 廢話文學 & 幽默系列 ---
             { zh: "聽君一席話，如聽一席話。", en: "Listening to your words is like listening to words.", tags: ["廢話文學"] },
             { zh: "沒有人可以利用我，因為我沒用。", en: "Nobody can use me, because I am useless.", tags: ["廢話文學"] },
+            { zh: "我已經不是當年的窮小子了，是今年的。", en: "I'm no longer the poor kid from that year; I'm the one from this year.", tags: ["廢話文學"] },
+            { zh: "如果你惹毛我，我就毛茸茸的走開。", en: "If you piss me off, I'll walk away fluffily.", tags: ["廢話文學"] },
+            { zh: "如果我猜的沒錯的話，那就是猜對了。", en: "If my guess is not wrong, then it is correct.", tags: ["廢話文學", "哲理"] },
+            { zh: "當你覺得自己不行的時候，請走到斑馬線上，那麼你就會變成一個行人。", en:"When you feel like you can't go on, just step onto a crosswalk; you'll become a pedestrian.", tags: ["廢話文學", "哲理"] },
+            { zh: "人紅是非多，活益比菲多。", en: "Fame brings drama; Bifido brings yogurt.", tags: ["廢話文學"] },
+            { zh: "大學玩四年，人生苦四十年；大學苦四年，人生苦四十四年。", en:"Play for 4 years, suffer for 40; study for 4 years, suffer for 44.", tags: ["廢話文學", "哲理"] },
+            { zh: "不聽老人言，快樂一整年。", en: "Ignore the elders' advice, and stay happy all year long.", tags: ["廢話文學", "信念"] },
+            { zh: "無心插柳 柳橙汁。", en: "Plant a willow by chance... Orange Juice.", tags: ["廢話文學"] },
+            { zh: "我心繫於你，你卻新細明體。", en:"My heart is tied to you, but yours is just PMingLiU.", tags: ["廢話文學"] },
+            { zh: "思念是一種病，思樂是一種冰。", en:"Longing is a disease; Slurpee is a freeze.", tags: ["廢話文學"] },
+            { zh: "書到用時方恨少，錢到月底方恨少。", en: "Knowledge and money: both are regretted for being too little when needed.", tags: ["廢話文學", "成功"] },
+            { zh: "有些事情你現在想不通，別著急，過一段時間你就想不起來了。", en:"If you can't figure it out now, don't worry. Soon, you won't even remember it.", tags: ["廢話文學", "希望"] },
+            { zh: "愛笑的女孩運氣都不會太差，因為運氣差的女孩根本笑不出來。", en:"Girls who laugh often have good luck, because those with bad luck can't laugh.", tags: ["廢話文學", "希望"] },
 
-            / 勵志名言 (標籤標準化)
+            // --- 土味情話系列 ---
+            { zh: "妳知道你跟星星有什麼差別嗎？ 星星在天上 妳在我心上。", en: "Difference between you and the stars? Stars are in the sky, you are in my heart.", tags: ["土味情話"] },
+            { zh: "剪刀石頭布，我只出剪刀，因為你是我的拳布。", en: "In Rock-Paper-Scissors, I only play scissors, because you are my 'everything'.", tags: ["土味情話"] },
+            { zh: "昨晚沒睡好，因為被子太輕，壓不住我想你的心。", en: "Didn't sleep well; the blanket was too light to hold down my longing for you.", tags: ["土味情話"] },
+            { zh: "我想換一個髮型：沒有你不行。", en: "I want a new hairstyle: the one where I can't live without you.", tags: ["土味情話"] },
+            { zh: "你是我的奶茶，什麼配料都百搭，永遠喝不膩。", en: "You're my milk tea; you go with everything, and I'll never get tired of you.", tags: ["土味情話"] },
+            { zh: "一人做事一人當，你的寶寶我來當。", en: "One person acts and bears the weight; I'll be the one to be your baby.", tags: ["土味情話"] },
+            { zh: "今天迷路了，你知道是什麼路嗎？愛你沒有退路。", en: "I'm lost today. What road? The road of loving you with no way back.", tags: ["土味情話"] },
+            { zh: "我犯了錯。什麼錯？愛你我不知所措。", en: "I made a mistake. What? I'm at a loss because I love you so much.", tags: ["土味情話"] },
+            { zh: "我就說怎麼手上突然多了雙筷子，原來是看到我的菜了。", en: "Why do I have chopsticks? Because I finally saw 'my dish' (my type).", tags: ["土味情話"] },
+            { zh: "我今天放了個很響的屁，但是沒有想你那麼想。", en: "I let out a loud fart today, but it wasn't as loud as I miss you.", tags: ["土味情話"] },
+            { zh: "你是不是把藍牙打開了？我們好像配對上了。", en: "Did you turn on your Bluetooth? Because we just paired up.", tags: ["土味情話"] },
+            { zh: "想說些漂亮的話哄妳，但想來想去，最漂亮的只有妳。", en: "I wanted to say pretty things, but the only thing pretty is you.", tags: ["土味情話"] },
+            { zh: "這是筷子，這是筷架。筷子給你，快嫁給我。", en: "Chopstick, chopstick rest. Here's the chopstick, now quickly marry me.", tags: ["土味情話"] },
+            { zh: "查了今天的農民曆，除了愛你諸事不宜。", en: "Checked the Almanac; except for loving you, nothing else is suitable today.", tags: ["土味情話"] },
+            { zh: "如果你是3我就是9，因為我除了你還是你。", en: "If you are 3, I am 9. Because I'm 'divided by you' and still 'you'.", tags: ["土味情話"] },
+            { zh: "剛剛有沒有感覺到地震？那是我第一眼看到妳時心動了一下。", en: "Did you feel an earthquake? That was just my heart skipping a beat for you.", tags: ["土味情話"] },
+            { zh: "你們洗澡都先洗哪裡？我通常是先喜歡你。", en: "Where do you wash first? I usually start by 'liking' you.", tags: ["土味情話"] },
+
+            // 勵志名言 (標籤標準化)
             { zh: "一直很想去做的事，去做了嗎？", en: "Did you do the thing you always wanted to do?", tags: ["行動", "成長"] },
             { zh: "心態決定狀態。", en: "Attitude determines altitude.", tags: ["信念", "哲理"] },
             { zh: "給自己一個完整的交代，給別人一個經驗的成果。", en: "Give yourself a full account, and others the fruit of experience.", tags: ["成長", "成功"] },
@@ -325,112 +332,127 @@
             { zh: "事情不是足以改變世界才算重要。", en: "Things don’t have to change the world to be important.", tags: ["哲理", "成功"] }
         ];
 
+        const quoteText = document.getElementById('quote-text');
+        const quoteFooterDiv = document.getElementById('quote-footer');
+        const generateButton = document.getElementById('generate-button');
+        const tagButtonsContainer = document.getElementById('tag-buttons');
+        const quoteCountDisplay = document.getElementById('quote-count');
 
-        // --- 功能邏輯 ---
+        const softColors = ['#5C3A55', '#A0527F', '#8B457A', '#333']; 
+        let currentSelectedTags = new Set(); 
+        let lastQuote = null; 
+        let quoteCount = 0; 
+        
+        // 更新標籤列表，加入土味情話
         const mainTags = ["行動", "堅持", "成長", "信念", "哲理", "希望", "成功", "廢話文學", "土味情話"];
-        let currentSelectedTags = new Set(["#隨機"]);
-        let lastQuote = null;
-        let quoteCount = 0;
 
-        // 初始化
-        window.onload = () => {
-            loadCount();
-            renderTagButtons();
-            generateQuote();
-        };
+        function getTodayDate() { return new Date().toISOString().slice(0, 10); }
 
-        // 計數器功能 (每日重置)
-        function loadCount() {
-            const today = new Date().toISOString().slice(0, 10);
-            const data = JSON.parse(localStorage.getItem('generator_data') || '{}');
-            if (data.date === today) {
-                quoteCount = data.count || 0;
-            } else {
-                quoteCount = 0;
-                saveCount(today);
+        function loadQuoteCount() {
+            const today = getTodayDate();
+            const storedData = localStorage.getItem('quoteGeneratorData');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                if (data.date === today) { quoteCount = data.count; } 
+                else { quoteCount = 0; saveQuoteCount(); }
             }
-            document.getElementById('quote-count').textContent = quoteCount;
+            quoteCountDisplay.textContent = quoteCount;
         }
 
-        function saveCount(dateStr = new Date().toISOString().slice(0, 10)) {
-            localStorage.setItem('generator_data', JSON.stringify({ date: dateStr, count: quoteCount }));
-            document.getElementById('quote-count').textContent = quoteCount;
+        function saveQuoteCount() {
+            localStorage.setItem('quoteGeneratorData', JSON.stringify({ date: getTodayDate(), count: quoteCount }));
+            quoteCountDisplay.textContent = quoteCount;
         }
-
-        // 渲染標籤按鈕
-        function renderTagButtons() {
-            const container = document.getElementById('tag-buttons');
-            const allTags = ["#隨機", ...mainTags];
+        
+        function createTagButtons() {
+            tagButtonsContainer.innerHTML = '';
+            const randomBtn = document.createElement('button');
+            randomBtn.className = 'filter-button selected'; 
+            randomBtn.textContent = '#隨機';
+            randomBtn.dataset.tag = '#隨機';
+            randomBtn.onclick = handleTagClick;
+            tagButtonsContainer.appendChild(randomBtn);
+            currentSelectedTags.add('#隨機'); 
             
-            allTags.forEach(tag => {
-                const btn = document.createElement('button');
-                btn.className = tag === "#隨機" ? 'filter-button selected' : 'filter-button';
-                btn.textContent = tag.startsWith('#') ? tag : `#${tag}`;
-                btn.onclick = () => toggleTag(tag, btn);
-                container.appendChild(btn);
+            mainTags.forEach(tag => {
+                const button = document.createElement('button');
+                button.className = 'filter-button';
+                button.textContent = `#${tag}`;
+                button.dataset.tag = tag;
+                button.onclick = handleTagClick;
+                tagButtonsContainer.appendChild(button);
             });
         }
 
-        function toggleTag(tag, btn) {
-            if (tag === "#隨機") {
+        function handleTagClick(event) {
+            const clickedTag = event.target.dataset.tag;
+            const isSelected = event.target.classList.contains('selected');
+            const randomBtn = document.querySelector('[data-tag="#隨機"]');
+            
+            if (clickedTag === '#隨機') {
                 currentSelectedTags.clear();
-                currentSelectedTags.add("#隨機");
+                currentSelectedTags.add('#隨機');
+                document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('selected'));
+                event.target.classList.add('selected');
             } else {
-                currentSelectedTags.delete("#隨機");
-                const cleanTag = tag.replace('#', '');
-                if (currentSelectedTags.has(cleanTag)) {
-                    currentSelectedTags.delete(cleanTag);
-                } else if (currentSelectedTags.size < 3) {
-                    currentSelectedTags.add(cleanTag);
+                if (isSelected) {
+                    event.target.classList.remove('selected');
+                    currentSelectedTags.delete(clickedTag);
+                    if (currentSelectedTags.size === 0) {
+                        currentSelectedTags.add('#隨機');
+                        randomBtn.classList.add('selected');
+                    }
                 } else {
-                    alert("最多只能選擇 3 個標籤喔！");
-                    return;
+                    if (currentSelectedTags.size < 3 || currentSelectedTags.has('#隨機')) {
+                        if (currentSelectedTags.has('#隨機')) {
+                            currentSelectedTags.delete('#隨機');
+                            randomBtn.classList.remove('selected');
+                        }
+                        event.target.classList.add('selected');
+                        currentSelectedTags.add(clickedTag);
+                    } else {
+                        alert("最多選 3 個喔！");
+                    }
                 }
             }
-
-            if (currentSelectedTags.size === 0) currentSelectedTags.add("#隨機");
-            
-            // 更新樣式
-            document.querySelectorAll('.filter-button').forEach(b => {
-                const bTag = b.textContent.replace('#', '');
-                b.classList.toggle('selected', currentSelectedTags.has(bTag) || currentSelectedTags.has(`#${bTag}`));
-            });
-
-            generateQuote(false); // 切換標籤時自動跑一句，但不計數
+            generateRandomQuote(); 
         }
 
-        // 核心產生邏輯
-        function generateQuote(shouldCount = true) {
-            let filtered = currentSelectedTags.has("#隨機") 
+        function generateRandomQuote() {
+            let availableQuotes = currentSelectedTags.has('#隨機') 
                 ? quotes 
                 : quotes.filter(q => q.tags.some(t => currentSelectedTags.has(t)));
 
-            if (filtered.length === 0) return;
-
-            let pick;
-            do {
-                pick = filtered[Math.floor(Math.random() * filtered.length)];
-            } while (pick === lastQuote && filtered.length > 1);
-
-            lastQuote = pick;
-
-            // 渲染畫面
-            const textEl = document.getElementById('quote-text');
-            textEl.style.animation = 'none';
-            void textEl.offsetHeight; 
-            textEl.style.animation = 'fadeIn 0.6s ease-out';
+            if (availableQuotes.length === 0) return;
             
-            textEl.innerHTML = `${pick.zh} <strong>${pick.en}</strong>`;
-            document.getElementById('quote-footer').innerHTML = pick.tags.map(t => `<span class="tag-display">#${t}</span>`).join('');
+            let randomQuoteObj;
+            do {
+                randomQuoteObj = availableQuotes[Math.floor(Math.random() * availableQuotes.length)];
+            } while (randomQuoteObj === lastQuote && availableQuotes.length > 1);
 
-            if (shouldCount) {
+            lastQuote = randomQuoteObj; 
+            quoteText.style.color = softColors[Math.floor(Math.random() * softColors.length)];
+            quoteText.style.animation = 'none';
+            void quoteText.offsetHeight;
+            quoteText.style.animation = 'fadeIn 0.8s ease-out';
+
+            quoteText.innerHTML = randomQuoteObj.zh + (randomQuoteObj.en ? `<strong>${randomQuoteObj.en}</strong>` : '');
+            quoteFooterDiv.innerHTML = randomQuoteObj.tags.map(tag => `<span class="tag-display">#${tag}</span>`).join('');
+            
+            // 只有在手動點擊 GO 或標籤時才增加計數
+            if (event && (event.type === 'click')) {
                 quoteCount++;
-                saveCount();
+                saveQuoteCount();
             }
         }
 
-        document.getElementById('generate-button').onclick = () => generateQuote(true);
+        window.onload = function() {
+            loadQuoteCount(); 
+            createTagButtons(); 
+            generateRandomQuote(); 
+        }
 
+        generateButton.onclick = generateRandomQuote;
     </script>
 </body>
 </html>
